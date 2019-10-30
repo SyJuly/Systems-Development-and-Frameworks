@@ -18,18 +18,10 @@
 <script>
   import { BButton, BListGroup } from 'bootstrap-vue'
   import ToDoItem from "./ToDoItem.vue";
-
-  let idCounter = 0;
-  let todos = [];
+  import  * as utils from "./../utils/utils.js"
 
   //inital setup
-  for(let i = 0; i < 10; i++){
-    todos[i] = {
-      id: idCounter,
-      text: "Example of a note"
-    }
-    idCounter++;
-  }
+  let todos = [...Array(10).keys()].map(id => ({ id, text: "Example of a note" }))
 
   export default {
     components: {
@@ -46,14 +38,16 @@
     methods: {
       addTodo() {
         const newTodo = {
-          id: idCounter,
+          id: utils.generateID(),
           text: this.todoTextInput
         }
-        idCounter++;
+
         this.todos = [newTodo, ...this.todos];
       },
-        editTodo(todoId, todoText) {
-            this.todos.find(todo => todo.id === todoId).text = todoText;
+        editTodo(todoUpdate) {
+            this.todos=this.todos.map(todo =>{
+                return todo.id===todoUpdate.id? todoUpdate:todo;
+        })
         },
       removeTodo(todoId) {
         this.todos = this.todos.filter(todo => {

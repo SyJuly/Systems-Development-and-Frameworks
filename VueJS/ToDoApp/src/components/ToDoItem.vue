@@ -40,7 +40,10 @@
       },
       save(){
         this.editModeOn = false;
-        this.$emit('editTodo', this.$props.todo.id, this.todoEditTextInput);
+        this.$emit('editTodo', {
+            id:this.$props.todo.id,
+            text: this.todoEditTextInput
+        });
       }
     }
   }
