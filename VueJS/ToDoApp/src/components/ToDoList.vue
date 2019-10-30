@@ -23,7 +23,7 @@
   let todos = [];
 
   //inital setup
-  for(let i = 0; i < 10; i++){
+let todos = [...Array(10).keys()].map(id => ({ id, text: "Example of a note" }))
     todos[i] = {
       id: idCounter,
       text: "Example of a note"
