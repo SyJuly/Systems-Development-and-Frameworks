@@ -2,7 +2,7 @@
   <div class="todoList">
     <div class="newTodo">
       <input v-model="todoTextInput" placeholder="Add a To-Do" @keydown.enter="addTodo">
-      <b-button variant="success" @click="addTodo()" >Add new To-Do</b-button>
+      <b-button variant="success" @click="addTodo" >Add new To-Do</b-button>
     </div>
       <b-list-group>
       <ToDoItem
