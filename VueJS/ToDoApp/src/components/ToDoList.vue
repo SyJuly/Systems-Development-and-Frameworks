@@ -52,13 +52,9 @@
         idCounter++;
         this.todos = [newTodo, ...this.todos];
       },
-      editTodo(todoId, todoText) {
-        this.todos.filter(todo => {
-          if (todo.id === todoId) {
-            todo.text = todoText;
-          }
-        });
-      },
+        editTodo(todoId, todoText) {
+            this.todos.find(todo => todo.id === todoId).text = todoText;
+        },
       removeTodo(todoId) {
         this.todos = this.todos.filter(todo => {
           return todo.id !== todoId
