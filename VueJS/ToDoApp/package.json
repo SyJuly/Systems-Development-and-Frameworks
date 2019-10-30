@@ -2,7 +2,7 @@
   "name": "todo",
   "description": "Simple project to manage To-Dos",
   "version": "1.0.0",
-  "author": "Juliane Fink <jule-fink@gmx.de>",
+  "authors": "Juliane Fink <jule-fink@gmx.de> & Eva Obersheimer <evaob@web.de>",
   "license": "MIT",
   "private": true,
   "scripts": {
