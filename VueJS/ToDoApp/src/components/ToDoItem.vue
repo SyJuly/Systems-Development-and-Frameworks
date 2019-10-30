@@ -2,7 +2,7 @@
   <b-list-group-item>
     <span v-if="editModeOn">
       <input ref="editRef" v-model="todoEditTextInput" @keydown.enter="save">
-      <b-button variant="outline-danger" @click="save()" >Save</b-button>
+      <b-button @click="save()" >Save</b-button>
     </span>
     <span v-else>
       {{todo.text}}
