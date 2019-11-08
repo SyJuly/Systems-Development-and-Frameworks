@@ -2,7 +2,7 @@ language: node_js
 node_js:
   - "stable"
 before_script:
-  - cd 1/ToDoApp
+  - cd ./1/ToDoApp/
   - npm install
 script:
   - npm test
