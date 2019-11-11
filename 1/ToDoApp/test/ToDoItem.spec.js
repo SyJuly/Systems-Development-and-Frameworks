@@ -27,7 +27,8 @@ describe('ToDoItem', () => {
           const updatedTodoText='updated todo';
           wrapper.vm.$emit('editTodo', updatedTodoText);
           expect(wrapper.emitted().editTodo[0]).toEqual([updatedTodoText]);
-
+          wrapper.vm.save();
+          expect(wrapper.vm.editModeOn).toBe(false);
         })
       })
       describe('click on remove Button', () => {
