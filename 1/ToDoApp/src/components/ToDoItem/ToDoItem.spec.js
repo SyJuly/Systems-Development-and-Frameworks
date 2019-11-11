@@ -13,6 +13,9 @@ describe('ToDoItem', () => {
     it('renders todo.text', () => {
       expect(wrapper.vm.todo.text).toBe('test-todo');
     })
+    it('does not show input field', () => {
+      expect(wrapper.vm.editModeOn).toBe(false);
+    })
     describe('click on Edit Button', () => {
       const editButton=wrapper.find('#editButton');
       it('shows input field', () => {
