@@ -1,6 +1,6 @@
 import { shallowMount } from '@vue/test-utils'
 import { mount } from '@vue/test-utils'
-import ToDoItem from '../src/components/ToDoItem.vue'
+import ToDoItem from './ToDoItem.vue'
 
 describe('ToDoItem', () => {
   describe('given a todo', () => {

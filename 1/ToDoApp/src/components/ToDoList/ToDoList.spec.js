@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import ToDoList from '../src/components/ToDoList.vue'
+import ToDoList from './ToDoList.vue'
 
 describe('ToDoList', () => {
   it('renders 10 initial example-items on the list', () => {
