@@ -1,4 +1,3 @@
-import { shallowMount } from '@vue/test-utils'
 import ToDoList from './ToDoList.vue'
 
 describe('ToDoList', () => {

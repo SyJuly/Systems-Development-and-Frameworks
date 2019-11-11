@@ -1,4 +1,3 @@
-import { shallowMount } from '@vue/test-utils'
 import { mount } from '@vue/test-utils'
 import ToDoItem from './ToDoItem.vue'
 
@@ -14,7 +13,6 @@ describe('ToDoItem', () => {
     it('renders todo.text', () => {
       expect(wrapper.vm.todo.text).toBe('test-todo');
     })
-
     describe('click on Edit Button', () => {
       const editButton=wrapper.find('#editButton');
       it('shows input field', () => {
