@@ -58,6 +58,7 @@ describe('ToDoItem', () => {
           removeButton.trigger('click');
           expect(wrapper.emitted('removeTodo').toBeTruthy);
         });
+
       });
     });
   });
