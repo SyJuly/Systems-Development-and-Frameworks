@@ -27,7 +27,9 @@ describe('ToDoItem', () => {
         it('$emits save with edited todo', () => {
           const updatedTodoText='updated todo';
           wrapper.vm.$emit('editTodo', updatedTodoText);
-          expect(wrapper.emitted().editTodo[0]).toEqual([updatedTodoText]);
+          expect(wrapper.emitted()).toEqual([
+            ['updated todo']
+          ]);
           wrapper.vm.save();
           expect(wrapper.vm.editModeOn).toBe(false);
         })
