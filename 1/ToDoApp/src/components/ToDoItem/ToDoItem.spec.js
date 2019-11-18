@@ -38,7 +38,7 @@ describe('ToDoItem', () => {
         it('$emits save with edited todo', () => {
           const updatedTodoText = 'updated todo';
           wrapper.vm.$emit('editTodo', updatedTodoText);
-          expect(wrapper.emitted().editTodo[0]).toEqual([updatedTodoText]);
+          expect(wrapper.emitted().editTodo).toEqual([['updated todo']]);
         });
 
         it('is not longer in Edit-Mode after saving', () => {
