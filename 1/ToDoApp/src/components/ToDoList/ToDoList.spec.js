@@ -1,15 +1,11 @@
-import ToDoList from './ToDoList.vue'
+import ToDoList from '../ToDoList/ToDoList.vue';
+import ToDoItem from '../ToDoItem/ToDoItem.vue';
+import {mount} from "@vue/test-utils";
 
 describe('ToDoList', () => {
   it('renders 10 initial example-items on the list', () => {
-import ToDoList from './ToDoList.vue'
-import ToDoItem from '../ToDoItem/ToDoItem.vue'
+    const wrapper = mount(ToDoList);
+    expect(wrapper.findAll(ToDoItem)).toHaveLength(10)
+  });
+});
 
-describe('ToDoList', () => {
-  it('renders 10 initial example-items on the list', () => {
-    wrapper = // .. setup
-    expect(wrapper.findAll(TodoItem)).toHaveLength(10)
-  })
-})
-  })
-})
