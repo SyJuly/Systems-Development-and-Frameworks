@@ -8,7 +8,7 @@ describe('Component', () => {
     expect(wrapper.isVueInstance()).toBeTruthy()
   })
   it('is rendering welcome-heading', () =>{
-    const wrapper=shallowMount(App)
+    const wrapper = shallowMount(App)
     expect(wrapper.find('h1').text()).toEqual('Simple Todo App');
   })
 })

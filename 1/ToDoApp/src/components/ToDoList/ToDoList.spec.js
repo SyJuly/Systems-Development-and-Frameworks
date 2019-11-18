@@ -2,6 +2,14 @@ import ToDoList from './ToDoList.vue'
 
 describe('ToDoList', () => {
   it('renders 10 initial example-items on the list', () => {
-    expect(ToDoList.data().todos.length).toBe(10)
+import ToDoList from './ToDoList.vue'
+import ToDoItem from '../ToDoItem/ToDoItem.vue'
+
+describe('ToDoList', () => {
+  it('renders 10 initial example-items on the list', () => {
+    wrapper = // .. setup
+    expect(wrapper.findAll(TodoItem)).toHaveLength(10)
+  })
+})
   })
 })
