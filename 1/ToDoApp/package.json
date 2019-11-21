@@ -12,8 +12,11 @@
     "lint": "eslint src"
   },
   "dependencies": {
+    "apollo-server": "^2.9.9",
+    "apollo-server-testing": "^2.9.9",
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.4",
+    "graphql": "^14.5.8",
     "vue": "^2.6.10"
   },
   "browserslist": [
@@ -29,7 +32,7 @@
     "babel-preset-env": "^1.6.0",
     "babel-preset-stage-3": "^6.24.1",
     "cross-env": "^5.0.5",
-    "css-loader": "^0.28.7",
+    "css-loader": "^3.2.0",
     "eslint": "^6.6.0",
     "eslint-plugin-vue": "^6.0.0",
     "file-loader": "^1.1.4",
@@ -39,7 +42,7 @@
     "vue-jest": "^3.0.5",
     "vue-loader": "^13.0.5",
     "vue-template-compiler": "^2.4.4",
-    "webpack": "^3.6.0",
+    "webpack": "^4.41.2",
     "webpack-dev-server": "^2.9.1"
   }
 }
