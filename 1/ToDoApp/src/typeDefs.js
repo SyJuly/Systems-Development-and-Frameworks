@@ -3,26 +3,20 @@ const { gql } = require('apollo-server');
 // that together define the "shape" of queries that are executed against
 // your data.
 const typeDefs = gql`
-
-
   type Todo {
     id: Int!
     message: String
-    assignee: Assignee
-  }
-  type Assignee {
-    name: String
-    todos: [Todo]
+    finished: Boolean
   }
   type Query {
-    todos: [Todo]
-    assignees : [Assignee]
+    todoById(id: Int!): Todo
+    allTodos: [Todo]
   }
   type Mutation {
-    addTodo(id: Int, message: String, assignee: String): Todo
-    updateTodo( id: Int!, message: String,assignee: String): Todo
+    addTodo( message: String): [Todo]
+    updateTodo( id: Int!, message: String , finished: Boolean): Todo
+    deleteTodo(id: Int): [Todo]
   }
 `;
-
 
 module.exports.typeDefs = typeDefs;

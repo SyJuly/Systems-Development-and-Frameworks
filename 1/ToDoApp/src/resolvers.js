@@ -1,49 +1,52 @@
-const { find, filter } = require('lodash');
-const todos = [
-  {
-    id:1,
-    message: 'first todo',
-    assignee: {name:'Eva'},
-  },
-  {
-    id:2,
-    message: 'second todo',
-    assignee: {name:'1'},
-  },
+const { find,filter }= require('lodash');
+
+
+
+const todos = [{
+        id: 1,
+        message: 'first todo',
+        finished: false
+    },
+    {
+        id: 2,
+        message: 'second todo',
+        finished: true
+    },
 ];
-const assignees=[
-    {
-      name:'Eva',
-    },
-    {
-      name:'1',
-    },
-]
+var maxId = 2;
 
 // Resolvers define the technique for fetching the types defined in the
 // schema. This resolver retrieves books from the "books" array above.
 const resolvers = {
-  Query: {
-    todos: () => todos,
-    assignees: () => assignees,
-  },
-  Mutation:{
-    addTodo:(object, input) =>{
-     todos.push({
-        message: input.message,
-        assignee: {name: input.name}
-               });
-       },
-       updateTodo: (_, { id, message, assignee }) => {
-        const todo = find(todos, { id: id });
-        if (!todo) {
-          throw new Error(`Couldn’t find todo with id ${id}`);
+    Query: {
+        allTodos: () => todos,
+        todoById: (root, args, context, info) => {
+            return find(todos, { id: args.id });
+        },
+    },
+    Mutation: {
+        addTodo: (_, { message }) => {
+            todos.push({
+                id: maxId + 1,
+                message: message,
+                finished: false
+            });
+            maxId += 1;
+            return todos;
+        },
+        updateTodo: (_, {id, message, finished}) => {
+            const todo = find(todos, {id: id});
+            if (!todo) {
+                throw new Error(`Couldn’t find todo with id ${id}`);
+            }
+            todo.message = message;
+            todo.finished = finished;
+            return todo;
+        },
+        deleteTodo: (_, {id}) => {
+            todos.splice(id, 1)
+            return todos;
         }
-        todo.message = message;
-        todo.assignee = assignee;
-        return todo;
-       }
-  }
-
+    }
 };
 module.exports.resolvers = resolvers;
