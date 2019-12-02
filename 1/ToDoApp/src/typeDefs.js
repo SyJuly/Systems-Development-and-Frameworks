@@ -4,7 +4,9 @@ const { gql } = require('apollo-server');
 // your data.
 const typeDefs = gql`
 
+
   type Todo {
+    id: Int!
     message: String
     assignee: Assignee
   }
@@ -17,7 +19,8 @@ const typeDefs = gql`
     assignees : [Assignee]
   }
   type Mutation {
-    addTodo( message: String, name:String): Todo
+    addTodo(id: Int, message: String, assignee: String): Todo
+    updateTodo( id: Int!, message: String,assignee: String): Todo
   }
 `;
 

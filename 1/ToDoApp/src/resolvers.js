@@ -1,9 +1,12 @@
+const { find, filter } = require('lodash');
 const todos = [
   {
+    id:1,
     message: 'first todo',
     assignee: {name:'Eva'},
   },
   {
+    id:2,
     message: 'second todo',
     assignee: {name:'1'},
   },
@@ -30,6 +33,15 @@ const resolvers = {
         message: input.message,
         assignee: {name: input.name}
                });
+       },
+       updateTodo: (_, { id, message, assignee }) => {
+        const todo = find(todos, { id: id });
+        if (!todo) {
+          throw new Error(`Couldn’t find todo with id ${id}`);
+        }
+        todo.message = message;
+        todo.assignee = assignee;
+        return todo;
        }
   }
 
