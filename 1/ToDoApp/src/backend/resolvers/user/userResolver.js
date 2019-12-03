@@ -1,6 +1,6 @@
 const { find }= require('lodash');
-const { generateIntID }= require("../utils.js");
-const { CONFIG }= require("../config/config");
+const { generateIntID }= require("../../utils.js");
+const { CONFIG }= require("../../config/config");
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 

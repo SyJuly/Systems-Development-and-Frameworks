@@ -1,6 +1,6 @@
 const { find }= require('lodash');
 const jwt = require('jsonwebtoken')
-const { CONFIG }= require("../config/config");
+const { CONFIG }= require("../../config/config");
 
 let todos = [{
         id: 1,
