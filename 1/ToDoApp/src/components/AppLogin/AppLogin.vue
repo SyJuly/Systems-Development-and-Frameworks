@@ -17,11 +17,11 @@
         placeholder="Password">
     </div>
     <div class='flex mt3'>
-      <div
+      <b-button variant="success"
         class='pointer mr2 button'
         @click="confirm()">
         {{login ? 'login' : 'create account'}}
-      </div>
+      </b-button>
       <div
         class='pointer button'
         @click="login = !login">

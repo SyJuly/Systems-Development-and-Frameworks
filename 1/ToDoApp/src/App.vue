@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <AppLogin/>
     <img src="./assets/logo.png">
     <h1>Simple Todo App</h1>
     <ToDoList/>
@@ -8,8 +9,10 @@
 
 <script>
   import ToDoList from "./components/ToDoList/ToDoList.vue";
+  import AppLogin from "./components/AppLogin/AppLogin.vue";
   export default {
     components: {
+      AppLogin,
       ToDoList,
     },
   }
