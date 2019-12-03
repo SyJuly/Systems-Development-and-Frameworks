@@ -25,6 +25,7 @@ const typeDefs = gql`
     deleteTodo(id: Int): [Todo]
     register(username: String!, email: String!, password: String!): User!
     login(email: String!, password: String!): String!
+    signup(name: String!, email: String!, password: String!): String!
   }
 `;
 
