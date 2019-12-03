@@ -1,11 +1,4 @@
-const { find,filter }= require('lodash');
-
-const users = [{
-  id: 1,
-  name: 'Test user',
-  email: 'your@email.com',
-  password: '$2b$10$ahs7h0hNH8ffAVg6PwgovO3AVzn1izNFHn.su9gcJnUWUzb2Rcb2W'
-}]
+const { find }= require('lodash');
 
 const todos = [{
         id: 1,
@@ -22,10 +15,9 @@ var maxId = 2;
 
 // Resolvers define the technique for fetching the types defined in the
 // schema. This resolver retrieves books from the "books" array above.
-const resolvers = {
+const todoResolver = {
     Query: {
         allTodos: () => todos,
-        allUsers: () => users,
         todoById: (root, args, context, info) => {
             return find(todos, { id: args.id });
         },
@@ -55,4 +47,4 @@ const resolvers = {
         }
     }
 };
-module.exports.resolvers = resolvers;
+module.exports.todoResolver = todoResolver;
