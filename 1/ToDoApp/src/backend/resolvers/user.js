@@ -1,4 +1,5 @@
 const { find }= require('lodash');
+const { generateIntID }= require("../utils.js");
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const SECRET = "secret"
@@ -10,22 +11,20 @@ const users = [{
   password: '$2y$10$3IUx11G0mcJfSpFWn3Lru.xac9OqHDzqLOAhdZovaUyKa2DhgCaOS' // "password"
 }]
 
-var currentID = 1;
-
 const userResolver = {
   Query: {
     allUsers: () => users,
   },
   Mutation: {
     signup: (_, {name, email, password}) => {
+      const userID = generateIntID()
       users.push({
-        id: currentID + 1,
+        id: userID,
         name: name,
         email: email,
         password: bcrypt.hash(password, 10),
       });
-      currentID++;
-      const token = jwt.sign({id: currentID + 1, email: email}, SECRET, {expiresIn: '1y'});
+      const token = jwt.sign({id: userID, email: email}, SECRET, {expiresIn: '1y'});
       return token;
     },
     login: (_, {email, password}) => {
@@ -34,7 +33,6 @@ const userResolver = {
         throw new Error(`Couldn’t find a user with the email: ${email}`);
       }
       const valid = bcrypt.compare(password, userFromEmail.password);
-      //const valid = password == userFromEmail.password;
       if (!valid) {
         throw new Error('Incorrect password');
       }
