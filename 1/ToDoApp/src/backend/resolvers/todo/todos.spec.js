@@ -11,7 +11,8 @@ const resolvers = mergeResolvers([userResolver, todoResolver]);
       typeDefs,
        resolvers
     });
-    const { query, mutate } = createTestClient(server);
+    const { query} = createTestClient(server);
+  //   const { query, mutate } = createTestClient(server);
 
     describe('query', () => {
       describe('todos', () => {
@@ -144,7 +145,7 @@ const resolvers = mergeResolvers([userResolver, todoResolver]);
             }
         }
     `;
-
+/**
   const UPDATE_TODO_MESSAGE = gql`
           mutation updateTodo( $id: Int, $message: String, $finished: Boolean, $token:String) {
               updateTodo(id: $id, message: $message, finished:$finished, token:$token)
@@ -153,6 +154,7 @@ const resolvers = mergeResolvers([userResolver, todoResolver]);
               }
           }
   `;
+  *//
   const LOGIN = gql`
       mutation login($email: String!, $password: String!) {
           login(email: $email, password: $password)
