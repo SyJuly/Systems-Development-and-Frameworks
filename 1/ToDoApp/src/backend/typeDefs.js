@@ -8,9 +8,16 @@ const typeDefs = gql`
     message: String
     finished: Boolean
   }
+  type User {
+    id: Int!
+    name: String
+    email: String
+    password: String
+  }
   type Query {
     todoById(id: Int!): Todo
     allTodos: [Todo]
+    allUsers: [User]
   }
   type Mutation {
     addTodo( message: String): [Todo]

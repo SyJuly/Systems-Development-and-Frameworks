@@ -1,6 +1,11 @@
 const { find,filter }= require('lodash');
 
-
+const users = [{
+  id: 1,
+  name: 'Test user',
+  email: 'your@email.com',
+  password: '$2b$10$ahs7h0hNH8ffAVg6PwgovO3AVzn1izNFHn.su9gcJnUWUzb2Rcb2W'
+}]
 
 const todos = [{
         id: 1,
@@ -20,6 +25,7 @@ var maxId = 2;
 const resolvers = {
     Query: {
         allTodos: () => todos,
+        allUsers: () => users,
         todoById: (root, args, context, info) => {
             return find(todos, { id: args.id });
         },
