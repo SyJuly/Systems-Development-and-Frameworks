@@ -23,7 +23,7 @@ let todos = [{
 const todoResolver = {
     Query: {
         allTodos: () => todos,
-        todoById: (root, args, context, info) => {
+        todoById: (root, args,) => {
             return find(todos, { id: args.id });
         },
     },

@@ -1,4 +1,4 @@
-const { ApolloServer, gql } = require('apollo-server');
+const { ApolloServer } = require('apollo-server');
 const { mergeResolvers } = require("merge-graphql-schemas");
 
 // The ApolloServer constructor requires two parameters: your schema
