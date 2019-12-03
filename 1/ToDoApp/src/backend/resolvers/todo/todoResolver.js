@@ -13,7 +13,7 @@ let todos = [{
         id: 2,
         message: 'second todo',
         finished: true,
-        creator: 1
+        creator: 2
     },
 ];
 

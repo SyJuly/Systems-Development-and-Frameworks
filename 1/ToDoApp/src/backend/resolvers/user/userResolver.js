@@ -1,7 +1,7 @@
 const { find }= require('lodash');
 const { generateIntID }= require("../../utils.js");
 const { CONFIG }= require("../../config/config");
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 const users = [{
@@ -9,7 +9,14 @@ const users = [{
   name: 'testuser',
   email: 'your@email.com',
   password: '$2y$10$3IUx11G0mcJfSpFWn3Lru.xac9OqHDzqLOAhdZovaUyKa2DhgCaOS' // "password"
-}]
+},
+{
+  id: 2,
+  name: '2. testuser',
+  email: '2your@email.com',
+  password: '$2y$10$3IUx11G0mcJfSpFWn3Lru.xac9OqHDzqLOAhdZovaUyKa2DhgCaOS' // "password"
+}
+]
 
 const userResolver = {
   Query: {
