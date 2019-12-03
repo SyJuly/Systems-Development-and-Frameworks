@@ -7,6 +7,7 @@ const typeDefs = gql`
     id: Int!
     message: String
     finished: Boolean
+    creator: [User]
   }
   type User {
     id: Int!
@@ -20,10 +21,9 @@ const typeDefs = gql`
     allUsers: [User]
   }
   type Mutation {
-    addTodo( message: String): [Todo]
-    updateTodo( id: Int!, message: String , finished: Boolean): Todo
-    deleteTodo(id: Int): [Todo]
-    register(username: String!, email: String!, password: String!): User!
+    addTodo( message: String, token: String): [Todo]
+    updateTodo( id: Int!, message: String , finished: Boolean, token: String): Todo
+    deleteTodo(id: Int, token: String): [Todo]
     login(email: String!, password: String!): String!
     signup(name: String!, email: String!, password: String!): String!
   }

@@ -1,9 +1,12 @@
 const { find }= require('lodash');
+const jwt = require('jsonwebtoken')
+const { CONFIG }= require("../config/config");
 
-const todos = [{
+let todos = [{
         id: 1,
         message: 'first todo',
-        finished: false
+        finished: false,
+        creator: 1
     },
     {
         id: 2,
@@ -24,25 +27,40 @@ const todoResolver = {
     },
     Mutation: {
         addTodo: (_, { message }) => {
+          const decoded = jwt.verify(token, CONFIG.JWT_SECRET)
+          const userId = decoded.id
             todos.push({
                 id: maxId + 1,
                 message: message,
-                finished: false
+                finished: false,
+                creator: userId
             });
             maxId += 1;
             return todos;
         },
-        updateTodo: (_, {id, message, finished}) => {
+        updateTodo: (_, {id, token, message, finished}) => {
+          const decoded = jwt.verify(token, CONFIG.JWT_SECRET)
+          const userId = decoded.id
             const todo = find(todos, {id: id});
-            if (!todo) {
+            if (todo.creator == userId) {
                 throw new Error(`Couldn’t find todo with id ${id}`);
             }
             todo.message = message;
             todo.finished = finished;
             return todo;
         },
-        deleteTodo: (_, {id}) => {
-            todos.splice(id, 1)
+        deleteTodo: (_, {id, token}) => {
+            const decoded = jwt.verify(token, CONFIG.JWT_SECRET)
+            const userId = decoded.id
+            const todo= find(todos, {id: id })
+            if(todo.creator === userId){
+              const index = todos.map(todo => {
+                return todo.id;
+              }).indexOf(id);
+              if (index > -1) {
+                return todos.splice(index, 1);
+              }
+            }
             return todos;
         }
     }
