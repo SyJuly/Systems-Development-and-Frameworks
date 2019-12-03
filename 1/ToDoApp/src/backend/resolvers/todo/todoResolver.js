@@ -11,7 +11,8 @@ let todos = [{
     {
         id: 2,
         message: 'second todo',
-        finished: true
+        finished: true,
+        creator: 1
     },
 ];
 var maxId = 2;
@@ -26,7 +27,7 @@ const todoResolver = {
         },
     },
     Mutation: {
-        addTodo: (_, { message }) => {
+        addTodo: (_, { message, token }) => {
           const decoded = jwt.verify(token, CONFIG.JWT_SECRET)
           const userId = decoded.id
             todos.push({
