@@ -1,4 +1,5 @@
 const { find }= require('lodash');
+const { generateIntID }= require("../../utils.js");
 const jwt = require('jsonwebtoken')
 const { CONFIG }= require("../../config/config");
 
@@ -15,7 +16,7 @@ let todos = [{
         creator: 1
     },
 ];
-var maxId = 2;
+
 
 // Resolvers define the technique for fetching the types defined in the
 // schema. This resolver retrieves books from the "books" array above.
@@ -31,12 +32,11 @@ const todoResolver = {
           const decoded = jwt.verify(token, CONFIG.JWT_SECRET)
           const userId = decoded.id
             todos.push({
-                id: maxId + 1,
+                id: generateIntID(),
                 message: message,
                 finished: false,
                 creator: userId
             });
-            maxId += 1;
             return todos;
         },
         updateTodo: (_, {id, token, message, finished}) => {
