@@ -23,6 +23,8 @@ const typeDefs = gql`
     addTodo( message: String): [Todo]
     updateTodo( id: Int!, message: String , finished: Boolean): Todo
     deleteTodo(id: Int): [Todo]
+    register(username: String!, email: String!, password: String!): User!
+    login(email: String!, password: String!): String!
   }
 `;
 

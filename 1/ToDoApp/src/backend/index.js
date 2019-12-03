@@ -7,7 +7,7 @@ const { typeDefs } = require('./schema/typeDefs');
 
 
 const { userResolver } = require("./resolvers/user");
-const { todoResolver } = require("./resolvers/resolvers");
+const { todoResolver } = require("./resolvers/todoResolver");
 const resolvers = mergeResolvers([userResolver, todoResolver]);
 
 
