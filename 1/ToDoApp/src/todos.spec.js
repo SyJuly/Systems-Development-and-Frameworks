@@ -1,21 +1,46 @@
 const { createTestClient } = require('apollo-server-testing');
-const { gql } = require('apollo-server');
+const { ApolloServer, gql } = require('apollo-server');
 const { typeDefs } = require("./typeDefs");
 const { resolvers } = require("./resolvers");
 
-describe ("query"), () => {
-    // create a test server to test against, using our production typeDefs,
-    // resolvers, and dataSources.
     const server = new ApolloServer({
       typeDefs,
        resolvers
     });
+    const { query, mutate } = createTestClient(server);
 
-  //  const { query, mutate } = createTestClient(server);
+     it('returns todo-message for given id', async () => {
+        const FIND_FIRST_TODO = gql`
+            query {
+              todoById(id:1) {
+                message
+              }
+            }
+          `;
+         const {
+         data : {findTodo}
+         }  = await query({query : FIND_FIRST_TODO});
+         expect(findTodo).toEqual({message:"first todo"});
+         });
 
+    it('deletes entries', async () => {
+    const DELETE_SECOND_TODO = gql`
+        mutation {
+          deleteTodo(id:1) {
+            message
+          }
+        }
+      `;
+     const {
+     data : {deleteTodo}
+     }  = await mutate({mutation : DELETE_SECOND_TODO});
+     expect(deleteTodo).toEqual([{message:"first todo"}]);
+     });
+
+
+/**
     it('initiates 2 todos', async () => {
      const res = await query({ query: allTodos});
-
      expect(res).toMatchObject({
                                   "data": {
                                     "allTodos": [
@@ -33,6 +58,18 @@ describe ("query"), () => {
      );
     });
 
-    it('returns')
+    it('returns todo-message for given id', async() => {
+    const res = await query({ query: todoById(1){message}});
+    expect(res).toMatchObject({
+                                "data": {
+                                  "todoById": {
+                                      "message": "first todo"
+                                  }
+                                }
+                              });
 
-};
+    })
+    **/
+
+
+
