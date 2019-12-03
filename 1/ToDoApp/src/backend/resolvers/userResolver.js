@@ -1,8 +1,8 @@
 const { find }= require('lodash');
 const { generateIntID }= require("../utils.js");
+const { CONFIG }= require("../config/config");
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-const SECRET = "secret"
 
 const users = [{
   id: 1,
@@ -24,7 +24,7 @@ const userResolver = {
         email: email,
         password: bcrypt.hash(password, 10),
       });
-      const token = jwt.sign({id: userID, email: email}, SECRET, {expiresIn: '1y'});
+      const token = jwt.sign({id: userID, email: email}, CONFIG.JWT_SECRET, {expiresIn: '1y'});
       return token;
     },
     login: (_, {email, password}) => {
@@ -36,7 +36,7 @@ const userResolver = {
       if (!valid) {
         throw new Error('Incorrect password');
       }
-      const token = jwt.sign({id: userFromEmail.id, email: userFromEmail.email}, SECRET, {expiresIn: '1y'});
+      const token = jwt.sign({id: userFromEmail.id, email: userFromEmail.email}, CONFIG.JWT_SECRET, {expiresIn: '1y'});
       return token;
     }
   }

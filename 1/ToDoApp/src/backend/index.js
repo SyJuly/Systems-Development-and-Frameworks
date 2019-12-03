@@ -6,7 +6,7 @@ const { mergeResolvers } = require("merge-graphql-schemas");
 const { typeDefs } = require('./schema/typeDefs');
 
 
-const { userResolver } = require("./resolvers/user");
+const { userResolver } = require("./resolvers/userResolver");
 const { todoResolver } = require("./resolvers/todoResolver");
 const resolvers = mergeResolvers([userResolver, todoResolver]);
 
