@@ -10,3 +10,6 @@ yarn-error.log
 *.ntvs*
 *.njsproj
 *.sln
+
+#Secret
+1/ToDoApp/src/backend/config/config.js
