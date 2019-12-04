@@ -43,8 +43,8 @@ const todoResolver = {
           const decoded = jwt.verify(token, CONFIG.JWT_SECRET)
           const userId = decoded.id
             const todo = find(todos, {id: id});
-            if (todo.creator == userId) {
-                throw new Error(`Couldn’t find todo with id ${id}`);
+            if (todo.creator !== userId) {
+                throw new Error(`Your are not the creator of todo:  id ${id}`);
             }
             todo.message = message;
             todo.finished = finished;
