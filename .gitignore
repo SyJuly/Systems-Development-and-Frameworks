@@ -12,4 +12,4 @@ yarn-error.log
 *.sln
 
 #Secret
-1/ToDoApp/src/backend/config/config.js
+#1/ToDoApp/src/backend/config/config.js

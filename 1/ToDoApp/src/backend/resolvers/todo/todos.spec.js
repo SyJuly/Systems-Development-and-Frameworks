@@ -73,7 +73,6 @@ const resolvers = mergeResolvers([userResolver, todoResolver]);
 
                                       it('updates todo message ', async () => {
                                                                 const res = await mutate({ mutation:UPDATE_TODO_MESSAGE , variables: {id: 1 , message:"kleines Update", finished:false, token: logInToken}});
-                                                                console.log(res);
                                                                 expect(res).toMatchObject({
                                                                                "data": {
                                                                                  "updateTodo":
