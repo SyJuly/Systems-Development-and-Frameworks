@@ -71,28 +71,19 @@ const resolvers = mergeResolvers([userResolver, todoResolver]);
               });
              describe('Modifying Todos', () => {
                  describe('given the loggedIn-User is the creator of the todo (allowed to modify)', () => {
-                               /**
+
                                       it('updates todo message ', async () => {
                                                                 const res = await query({ mutation:UPDATE_TODO_MESSAGE , variables: {id: 1 , message:"kleines Update", finished:false, token: logInToken}});
                                                                 console.log(res);
                                                                 expect(res).toMatchObject({
                                                                                "data": {
-                                                                                 "updateTodo": [
+                                                                                 "updateTodo":
                                                                                    {
                                                                                      "message": "kleines Update"
-                                                                                   },
-                                                                                   {
-                                                                                     "message": "second todo"
-                                                                                   },
-                                                                                   {
-                                                                                     "message" : "neues Todo"
                                                                                    }
-                                                                                 ]
                                                                                }
                                                                 });
                                      });
-
-                                     **/
 
                                      it('deletes todo ', async () => {
                                        const res = await query({ mutation:DELETE_TODO , variables: {id: 1 , token: logInToken}});
@@ -145,7 +136,7 @@ const resolvers = mergeResolvers([userResolver, todoResolver]);
             }
         }
     `;
-/**
+
   const UPDATE_TODO_MESSAGE = gql`
           mutation updateTodo( $id: Int, $message: String, $finished: Boolean, $token:String) {
               updateTodo(id: $id, message: $message, finished:$finished, token:$token)
@@ -154,7 +145,7 @@ const resolvers = mergeResolvers([userResolver, todoResolver]);
               }
           }
   `;
-  **/
+
   const LOGIN = gql`
       mutation login($email: String!, $password: String!) {
           login(email: $email, password: $password)
