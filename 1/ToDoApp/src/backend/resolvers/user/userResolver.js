@@ -1,7 +1,7 @@
 const { find }= require('lodash');
 const { generateIntID }= require("../../utils.js");
 const { CONFIG }= require("../../config/config");
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
 const users = [{
@@ -25,6 +25,10 @@ const userResolver = {
   Mutation: {
     signup: (_, {name, email, password}) => {
       const userID = generateIntID()
+      const userFromEmail = find(users, {email: email});
+      if (userFromEmail) {
+        throw new Error(`This email is already used by another user: ${email}`);
+      }
       users.push({
         id: userID,
         name: name,
