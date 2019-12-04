@@ -11,8 +11,7 @@ const resolvers = mergeResolvers([userResolver, todoResolver]);
       typeDefs,
        resolvers
     });
-    const { query} = createTestClient(server);
-  //   const { query, mutate } = createTestClient(server);
+     const { query, mutate } = createTestClient(server);
 
     describe('query', () => {
       describe('todos', () => {
@@ -40,18 +39,18 @@ const resolvers = mergeResolvers([userResolver, todoResolver]);
     var logInToken="";
           describe('given user is not logged in/no token', () => {
                it('creating a todo returns an error', async () => {
-                        const res = await query({ mutation:CREATE_TODO , variables: {message: "neues Todo",token: logInToken}});
+                        const res = await mutate({ mutation:CREATE_TODO , variables: {message: "neues Todo",token: logInToken}});
                         expect(res.errors).toHaveLength(1);
                       });
                it('logIn with correct credentials returns token-String', async () => {
-                                       const res = await query({ mutation:LOGIN , variables: {email: "your@email.com", password:"password"}});
+                                       const res = await mutate({ mutation:LOGIN , variables: {email: "your@email.com", password:"password"}});
                                        expect(res.data.login).toBeDefined();
                                        logInToken=res.data.login;
                                      });
           });
           describe('give user is loggedIn', () => {
               it('adds a todo', async () => {
-                                    const res = await query({ mutation:CREATE_TODO , variables: {message: "neues Todo" , token: logInToken}});
+                                    const res = await  mutate({ mutation:CREATE_TODO , variables: {message: "neues Todo" , token: logInToken}});
                                     expect(res).toMatchObject({
                                                                 "data": {
                                                                   "addTodo": [
@@ -73,7 +72,7 @@ const resolvers = mergeResolvers([userResolver, todoResolver]);
                  describe('given the loggedIn-User is the creator of the todo (allowed to modify)', () => {
 
                                       it('updates todo message ', async () => {
-                                                                const res = await query({ mutation:UPDATE_TODO_MESSAGE , variables: {id: 1 , message:"kleines Update", finished:false, token: logInToken}});
+                                                                const res = await mutate({ mutation:UPDATE_TODO_MESSAGE , variables: {id: 1 , message:"kleines Update", finished:false, token: logInToken}});
                                                                 console.log(res);
                                                                 expect(res).toMatchObject({
                                                                                "data": {
@@ -86,13 +85,13 @@ const resolvers = mergeResolvers([userResolver, todoResolver]);
                                      });
 
                                      it('deletes todo ', async () => {
-                                       const res = await query({ mutation:DELETE_TODO , variables: {id: 1 , token: logInToken}});
+                                       const res = await mutate({ mutation:DELETE_TODO , variables: {id: 1 , token: logInToken}});
                                        expect(res.data.deleteTodo).toHaveLength(1);
                                      });
                                });
                   describe('given the loggedIn-User is NOT the creator of the todo (NOT allowed to modify)', () => {
                                           it('does not delete the todo', async () => {
-                                            const res = await query({ mutation:DELETE_TODO , variables: {id: 2 , token: logInToken}});
+                                            const res = await mutate({ mutation:DELETE_TODO , variables: {id: 2 , token: logInToken}});
                                             expect(res.data.deleteTodo).toHaveLength(2);
                                           });
                   });
