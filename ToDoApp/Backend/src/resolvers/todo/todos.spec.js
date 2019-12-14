@@ -3,7 +3,7 @@ const { createTestClient } = require('apollo-server-testing');
 const { ApolloServer, gql } = require('apollo-server');
 const { typeDefs } = require("../../schema/typeDefs");
 const { userResolver } = require("../user/userResolver");
-const { todoResolver } = require("../todo/todoResolver");
+const { todoResolver } = require("./todoResolver");
 
 const resolvers = mergeResolvers([userResolver, todoResolver]);
 
