@@ -12,9 +12,20 @@
     "lint": "eslint src"
   },
   "dependencies": {
+    "apollo-server": "^2.9.9",
+    "apollo-server-express": "^2.9.12",
+    "apollo-server-testing": "^2.9.9",
+    "bcryptjs": "^2.4.3",
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.4",
-    "vue": "^2.6.10"
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "graphql": "^14.5.8",
+    "jsonwebtoken": "^8.5.1",
+    "merge-graphql-schemas": "^1.7.3",
+    "vue": "^2.6.10",
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.9.1"
   },
   "browserslist": [
     "> 1%",
@@ -29,7 +40,7 @@
     "babel-preset-env": "^1.6.0",
     "babel-preset-stage-3": "^6.24.1",
     "cross-env": "^5.0.5",
-    "css-loader": "^0.28.7",
+    "css-loader": "^3.2.0",
     "eslint": "^6.6.0",
     "eslint-plugin-vue": "^6.0.0",
     "file-loader": "^1.1.4",
@@ -38,8 +49,6 @@
     "sass-loader": "^6.0.6",
     "vue-jest": "^3.0.5",
     "vue-loader": "^13.0.5",
-    "vue-template-compiler": "^2.4.4",
-    "webpack": "^3.6.0",
-    "webpack-dev-server": "^2.9.1"
+    "vue-template-compiler": "^2.4.4"
   }
 }
