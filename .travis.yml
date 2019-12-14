@@ -1,18 +1,15 @@
 language: node_js
 node_js:
   - "stable"
-env:
-  - Backend
-  - Frontend
 jobs:
   include:
-    - env: Backend
+    - stage: "Backend"
       install:
         - cd ./ToDoApp/Backend
         - npm install
       script:
         - npm test
-    - env: Frontend
+    - stage: "Frontend"
       install:
         - cd ./ToDoApp/Frontend
         - npm install
