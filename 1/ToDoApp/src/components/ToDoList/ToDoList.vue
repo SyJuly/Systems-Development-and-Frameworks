@@ -17,8 +17,8 @@
 
 <script>
   import { BButton, BListGroup } from 'bootstrap-vue'
-  import ToDoItem from "./ToDoItem.vue";
-  import  * as utils from "./../utils/utils.js"
+  import ToDoItem from "../ToDoItem/ToDoItem.vue";
+  import  * as utils from "../../utils/utils.js"
 
   //inital setup
   let todos = [...Array(10).keys()].map(id => ({ id, text: "Example of a note" }))

@@ -6,9 +6,9 @@
     </span>
     <span v-else>
       {{todo.text}}
-      <b-button variant="outline-primary" @click="edit" >Edit</b-button>
+      <b-button id="editButton" variant="outline-primary" @click="edit" >Edit</b-button>
     </span>
-    <b-button variant="outline-danger" @click="$emit('removeTodo', todo.id)">Remove</b-button>
+    <b-button id="removeButton" variant="outline-danger" @click="$emit('removeTodo', todo.id)">Remove</b-button>
   </b-list-group-item>
 </template>
 
