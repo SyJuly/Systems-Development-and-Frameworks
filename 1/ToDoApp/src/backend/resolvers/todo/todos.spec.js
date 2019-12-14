@@ -12,7 +12,6 @@ const { query, mutate } = createTestClient(server);
 
 describe('query', () => {
     describe('todos', () => {
-
         it('todo_list has 2 initial todos', async () => {
             const res = await query({
                 query: GET_ALL_TODOS
@@ -21,17 +20,10 @@ describe('query', () => {
         });
 
         it('returns todo-message for given id', async () => {
-            const firstTodo = {
-                "data": {
-                    "todoById": {
-                        "message": "first todo"
-                    }
-                }
-            };
             const res = await query({
                 query: GET_FIRST_TODOMESSAGE
             });
-            expect(res).toMatchObject(firstTodo);
+            expect(res.data.todoById).toMatchObject({message: "first todo"});
         });
     });
 });
@@ -63,6 +55,9 @@ describe('mutate', () => {
     });
     describe('give user is loggedIn', () => {
         it('adds a todo', async () => {
+            const res_allTodos=await query ({
+                    query: GET_ALL_TODOS
+            });
             const res = await mutate({
                 mutation: CREATE_TODO,
                 variables: {
@@ -70,20 +65,8 @@ describe('mutate', () => {
                     token: logInToken
                 }
             });
-            expect(res).toMatchObject({
-                "data": {
-                    "addTodo": [{
-                            "message": "first todo"
-                        },
-                        {
-                            "message": "second todo"
-                        },
-                        {
-                            "message": "neues Todo"
-                        }
-                    ]
-                }
-            });
+            expect(res.data.addTodo).toHaveLength(res_allTodos.data.allTodos.length+1);
+            expect(res.data.addTodo[res.data.addTodo.length-1].message).toEqual("neues Todo");
 
         });
         describe('Modifying Todos', () => {
@@ -107,7 +90,6 @@ describe('mutate', () => {
                         }
                     });
                 });
-
                 it('deletes todo ', async () => {
                     const res = await mutate({
                         mutation: DELETE_TODO,
@@ -128,7 +110,7 @@ describe('mutate', () => {
                             token: logInToken
                         }
                     });
-                    expect(res.data.deleteTodo).toHaveLength(2);
+                    expect(res.data.deleteTodo.toBeUndefined);
                 });
             });
         });
