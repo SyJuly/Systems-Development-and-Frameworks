@@ -29,14 +29,14 @@ describe('query', () => {
 });
 
 describe('mutate', () => {
-    var logInToken = "";
+    var logInToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ5b3VyQGVtYWlsLmNvbSIsImlhdCI6MTU3NTQ0NjYzNCwiZXhwIjoxNjA3MDA0MjM0fQ.cHeP2Ih8Dxeyyxw3rePvfVCeJJFFnO7A9BrV1QL4hcA";
     describe('given user is not logged in/no token', () => {
         it('creating a todo returns an error', async () => {
             const res = await mutate({
                 mutation: CREATE_TODO,
                 variables: {
                     message: "neues Todo",
-                    token: logInToken
+                    token: ""
                 }
             });
             expect(res.errors).toHaveLength(1);
@@ -50,7 +50,6 @@ describe('mutate', () => {
                 }
             });
             expect(res.data.login).toBeDefined();
-            logInToken = res.data.login;
         });
     });
     describe('give user is loggedIn', () => {
