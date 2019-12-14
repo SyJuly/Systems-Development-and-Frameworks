@@ -8,8 +8,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "test": "jest",
-    "lint": "eslint src"
+    "test": "jest"
   },
   "dependencies": {
     "apollo-server": "^2.9.9",
@@ -37,7 +36,6 @@
     "babel-preset-stage-3": "^6.24.1",
     "cross-env": "^5.0.5",
     "css-loader": "^3.2.0",
-    "eslint": "^6.6.0",
     "file-loader": "^1.1.4",
     "jest": "^24.9.0"
   }
