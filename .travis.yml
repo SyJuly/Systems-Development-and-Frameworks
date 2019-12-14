@@ -5,17 +5,16 @@ env:
   - Backend
   - Frontend
 jobs:
-  fast_finish: true
   include:
     - env: Backend
       before_script:
-        - cd ./1/ToDoApp/Backend
+        - cd ./ToDoApp/Backend
         - npm install
       script:
         - npm test
     - env: Frontend
       before_script:
-        - cd ./1/ToDoApp/Frontend
+        - cd ./ToDoApp/Frontend
         - npm install
       script:
         - npm test
