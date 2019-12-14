@@ -1,19 +1,9 @@
 language: node_js
 node_js:
   - "stable"
-jobs:
-  fast_finish: true
-  include:
-    - env: Frontend
-      before_script:
-        - cd ./ToDoApp/Frontend
-        - npm install
-      script:
-        - npm test
-        - npm run lint
-    - env: Backend
-      before_script:
-        - cd ./ToDoApp/Backend
-        - npm install
-        script:
-          - npm test
+before_script:
+  - cd ./ToDoApp/Frontend
+  - npm install
+  script:
+    - npm test
+    - npm run lint
