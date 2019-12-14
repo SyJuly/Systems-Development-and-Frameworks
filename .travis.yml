@@ -7,13 +7,13 @@ env:
 jobs:
   include:
     - env: Backend
-      before_script:
+      install:
         - cd ./ToDoApp/Backend
         - npm install
       script:
         - npm test
     - env: Frontend
-      before_script:
+      install:
         - cd ./ToDoApp/Frontend
         - npm install
       script:
