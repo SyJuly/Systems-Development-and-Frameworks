@@ -1,7 +1,7 @@
 language: node_js
 node_js:
   - "stable"
-matrix:
+jobs:
   fast_finish: true
   include:
     - env: Frontend
