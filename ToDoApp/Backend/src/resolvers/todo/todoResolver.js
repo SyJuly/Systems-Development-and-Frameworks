@@ -80,7 +80,6 @@ const todoResolver = {
                 }
             )
             const todo = queryResults.records.map(todo => todo.get(`t`).properties)[0];
-            console.log(todo)
             if (todo == null) {
               throw new Error(`Your are not the creator of todo or this node has been deleted:  id ${id}`);
             }

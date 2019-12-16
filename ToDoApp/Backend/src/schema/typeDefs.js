@@ -23,7 +23,7 @@ const typeDefs = gql`
   type Mutation {
     addTodo( message: String, token: String): [Todo]
     updateTodo( id: String, message: String , finished: Boolean, token: String): Todo
-    deleteTodo(id: String, token: String): [Todo]
+    deleteTodo(id: String, token: String): Todo
     login(email: String!, password: String!): String!
     signup(name: String!, email: String!, password: String!): String!
   }
