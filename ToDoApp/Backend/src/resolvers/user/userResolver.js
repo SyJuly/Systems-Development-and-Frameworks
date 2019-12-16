@@ -3,6 +3,12 @@ const { generateIntID }= require("../../../utils.js");
 const { CONFIG }= require("../../config/config");
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const neo4j = require('neo4j-driver').v1
+
+const driver = neo4j.driver(
+    'neo4j://localhost',
+    neo4j.auth.basic('neo4j', 'password')
+)
 
 const users = [{
   id: 1,
@@ -18,9 +24,15 @@ const users = [{
 }
 ]
 
+const session = driver.session({
+  database: 'TodoApp',
+  defaultAccessMode: neo4j.session.WRITE
+})
+
 const userResolver = {
   Query: {
     allUsers: () => users,
+    //allUsers: session.run('MATCH(n:User) RETURN n')
   },
   Mutation: {
     signup: (_, {name, email, password}) => {

@@ -28,9 +28,8 @@ const todoResolver = {
         },
     },
     Mutation: {
-        addTodo: (_, { message, token }) => {
-          const decoded = jwt.verify(token, CONFIG.JWT_SECRET)
-          const userId = decoded.id
+        addTodo: (_, { message, token }, context) => {
+          const userId = context.user.id
             todos.push({
                 id: generateIntID(),
                 message: message,
@@ -39,9 +38,8 @@ const todoResolver = {
             });
             return todos;
         },
-        updateTodo: (_, {id, token, message, finished}) => {
-          const decoded = jwt.verify(token, CONFIG.JWT_SECRET)
-          const userId = decoded.id
+        updateTodo: (_, {id, token, message, finished}, context) => {
+          const userId = context.user.id
             const todo = find(todos, {id: id});
             if (todo.creator !== userId) {
                 throw new Error(`Your are not the creator of todo:  id ${id}`);
@@ -50,9 +48,8 @@ const todoResolver = {
             todo.finished = finished;
             return todo;
         },
-        deleteTodo: (_, {id, token}) => {
-            const decoded = jwt.verify(token, CONFIG.JWT_SECRET)
-            const userId = decoded.id
+        deleteTodo: (_, {id, token}, context) => {
+            const userId = context.user.id
             const todo= find(todos, {id: id })
             if(todo.creator === userId){
               const index = todos.map(todo => {
