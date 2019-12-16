@@ -45,11 +45,18 @@ const todoResolver = {
           const decoded = jwt.verify(token, CONFIG.JWT_SECRET)
           const userId = decoded.id
           const session = context.driver.session();
-          const queryResults = await session.run(`MATCH (t${id}:Todo{id:${id}}) RETURN t${id}`);
-          const todo = queryResults.records.map(todo => todo.get(`t${id}`).properties)[0];
-          /*if (todo.creator !== userId) {
+          const queryResults = await session.run(
+              'MATCH (t:Todo{id:$todoId}) <-[r:PUBLISHED]-(u:User{id:$userId}) RETURN t',
+              {
+                todoId: id,
+                userId
+              }
+          )
+          const todo = queryResults.records.map(todo => todo.get(`t`).properties)[0];
+          console.log(todo)
+          if (todo == null) {
             throw new Error(`Your are not the creator of todo:  id ${id}`);
-          }*/
+          }
 
           let updatedTodo = {...todo};
           updatedTodo.message = message;
