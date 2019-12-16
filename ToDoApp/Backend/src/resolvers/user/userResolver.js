@@ -3,24 +3,15 @@ const { generateIntID }= require("../../../utils.js");
 const { CONFIG }= require("../../config/config");
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const { neo4jgraphql } = require('neo4j-graphql-js');
 
-const users = [{
-  id: 1,
-  name: 'testuser',
-  email: 'your@email.com',
-  password: '$2y$10$3IUx11G0mcJfSpFWn3Lru.xac9OqHDzqLOAhdZovaUyKa2DhgCaOS' // "password"
-},
-{
-  id: 2,
-  name: '2. testuser',
-  email: '2your@email.com',
-  password: '$2y$10$3IUx11G0mcJfSpFWn3Lru.xac9OqHDzqLOAhdZovaUyKa2DhgCaOS' // "password"
-}
-]
 
 const userResolver = {
   Query: {
-    allUsers: () => users,
+    //allUsers: () => users,
+    allUsers(object, params, ctx, resolveInfo) {
+      return neo4jgraphql(object, params, ctx, resolveInfo);
+    }
   },
   Mutation: {
     signup: (_, {name, email, password}) => {

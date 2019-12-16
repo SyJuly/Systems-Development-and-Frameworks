@@ -1,5 +1,11 @@
-const { ApolloServer } = require('apollo-server');
+const { ApolloServer, makeExecutableSchema } = require('apollo-server');
 const { mergeResolvers } = require("merge-graphql-schemas");
+const neo4j = require('neo4j-driver');
+
+const driver = neo4j.driver(
+    'bolt://localhost',
+    neo4j.auth.basic('neo4j', 'password')
+)
 
 // The ApolloServer constructor requires two parameters: your schema
 // definition and your set of resolvers.
@@ -11,7 +17,9 @@ const { todoResolver } = require("./src/resolvers/todo/todoResolver");
 const resolvers = mergeResolvers([userResolver, todoResolver]);
 
 
-const server = new ApolloServer({ typeDefs, resolvers});
+const schema = makeExecutableSchema({ typeDefs, resolvers });
+
+const server = new ApolloServer({ schema, context: { driver } });
 
 // The `listen` method launches a web server.
 server.listen().then(({ url }) => {

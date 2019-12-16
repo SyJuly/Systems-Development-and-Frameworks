@@ -2,27 +2,16 @@ const { find }= require('lodash');
 const { generateIntID }= require("../../../utils.js");
 const jwt = require('jsonwebtoken')
 const { CONFIG }= require("../../config/config");
-
-let todos = [{
-        id: 1,
-        message: 'first todo',
-        finished: false,
-        creator: 1
-    },
-    {
-        id: 2,
-        message: 'second todo',
-        finished: true,
-        creator: 2
-    },
-];
+const { neo4jgraphql } = require('neo4j-graphql-js');
 
 
 // Resolvers define the technique for fetching the types defined in the
 // schema. This resolver retrieves books from the "books" array above.
 const todoResolver = {
     Query: {
-        allTodos: () => todos,
+        allTodos(object, params, ctx, resolveInfo) {
+          return neo4jgraphql(object, params, ctx, resolveInfo);
+        },
         todoById: (root, args,) => {
             return find(todos, { id: args.id });
         },
