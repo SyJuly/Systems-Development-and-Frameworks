@@ -2,13 +2,13 @@ let todos = [{
   id: 1,
   message: 'first todo',
   finished: false,
-  creator: 1
+  publishedBy: 1
 },
   {
     id: 2,
     message: 'second todo',
     finished: true,
-    creator: 2
+    publishedBy: 2
   },
 ];
 
@@ -26,5 +26,5 @@ const users = [{
   }
 ]
 
-//module.exports.todos = todos;
-//module.exports.users = users;
+module.exports.todos = todos;
+module.exports.users = users;
