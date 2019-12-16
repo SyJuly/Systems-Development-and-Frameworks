@@ -30,33 +30,14 @@ const todoResolver = {
             message: message,
             finished: false
           }
-          try {
-            await session.run(
-                'CREATE (t$id:Todo {id: $id, message: $message, finished: $finished}) RETURN t$id',
-                {
-                  id:todo.id,
-                  message:todo.message,
-                  finished:todo.finished
-                }
-            );
-          } finally {
-            session.close()
-          }
-
-          const createPublishedRealtion = context.driver.session();
-          try {
-            await createPublishedRealtion.run(
-                'MATCH (u:User{id:$userId}), (t:Todo{id:$todoId}) \n' +
-                'MERGE (u)-[:PUBLISHED]->(t)\n',
-                {
-                  userId,
-                  todoId: todo.id
-                }
-            );
-          } finally {
-            createPublishedRealtion.close()
-          }
-
+          await session.run(
+              'CREATE (t:Todo {id: $id, message: $message, finished: $finished})\n' +
+              'WITH t \n' +
+              'MATCH (u:User{id:$userId})\n' +
+              'MERGE (u)-[:PUBLISHED]->(t)\n',
+              {...todo, userId}
+          );
+          session.close()
           return [todo];
 
         },
