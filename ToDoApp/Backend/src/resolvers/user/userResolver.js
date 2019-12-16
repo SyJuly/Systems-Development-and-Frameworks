@@ -4,6 +4,7 @@ const { CONFIG }= require("../../config/config");
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { neo4jgraphql } = require('neo4j-graphql-js');
+const {users} = require('../../db/data')
 
 
 const userResolver = {

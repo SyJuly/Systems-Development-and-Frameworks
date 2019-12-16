@@ -53,7 +53,6 @@ const todoResolver = {
               }
           )
           const todo = queryResults.records.map(todo => todo.get(`t`).properties)[0];
-          console.log(todo)
           if (todo == null) {
             throw new Error(`Your are not the creator of todo:  id ${id}`);
           }
@@ -69,19 +68,28 @@ const todoResolver = {
           session.close();
           return updatedTodo;
         },
-        deleteTodo: (_, {id, token}) => {
+        deleteTodo: async (_, {id, token}, context) => {
             const decoded = jwt.verify(token, CONFIG.JWT_SECRET)
             const userId = decoded.id
-            const todo= find(todos, {id: id })
-            if(todo.creator === userId){
-              const index = todos.map(todo => {
-                return todo.id;
-              }).indexOf(id);
-              if (index > -1) {
-                return todos.splice(index, 1);
-              }
+            const session = context.driver.session();
+            const queryResults = await session.run(
+                'MATCH (t:Todo{id:$todoId}) <-[r:PUBLISHED]-(u:User{id:$userId}) RETURN t',
+                {
+                  todoId: id,
+                  userId
+                }
+            )
+            const todo = queryResults.records.map(todo => todo.get(`t`).properties)[0];
+            console.log(todo)
+            if (todo == null) {
+              throw new Error(`Your are not the creator of todo or this node has been deleted:  id ${id}`);
             }
-            return todos;
+            await session.run(
+                'MATCH (t:Todo{id:$todoId}) DETACH DELETE t',
+                { todoId: id }
+            )
+            session.close();
+            return todo;
         }
     }
 };
