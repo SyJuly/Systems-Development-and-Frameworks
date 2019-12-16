@@ -1,5 +1,5 @@
 const { find }= require('lodash');
-const { generateIntID }= require("../../../utils.js");
+const { generateUUID }= require("../../../utils.js");
 const { CONFIG }= require("../../config/config");
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
@@ -9,14 +9,13 @@ const {users} = require('../../db/data')
 
 const userResolver = {
   Query: {
-    //allUsers: () => users,
     allUsers(object, params, context, resolveInfo) {
       return neo4jgraphql(object, params, context, resolveInfo);
     }
   },
   Mutation: {
     signup: (_, {name, email, password}) => {
-      const userID = generateIntID()
+      const userID = generateUUID()
       const userFromEmail = find(users, {email: email});
       if (userFromEmail) {
         throw new Error(`This email is already used by another user: ${email}`);

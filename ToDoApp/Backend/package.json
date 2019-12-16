@@ -22,6 +22,7 @@
     "merge-graphql-schemas": "^1.7.3",
     "neo4j-driver": "^4.0.0",
     "neo4j-graphql-js": "^2.10.2",
+    "uuid": "^3.3.3",
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.9.1"
   },

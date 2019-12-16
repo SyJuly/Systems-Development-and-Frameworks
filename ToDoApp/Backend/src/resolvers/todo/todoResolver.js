@@ -1,5 +1,5 @@
 const { find }= require('lodash');
-const { generateIntID, createTodo }= require("../../../utils.js");
+const { generateUUID }= require("../../../utils.js");
 const jwt = require('jsonwebtoken')
 const { CONFIG }= require("../../config/config");
 const { neo4jgraphql } = require('neo4j-graphql-js');
@@ -26,7 +26,7 @@ const todoResolver = {
           const userId = decoded.id
           const session = context.driver.session();
           const todo = {
-            id: generateIntID(),
+            id: generateUUID(),
             message: message,
             finished: false
           }
