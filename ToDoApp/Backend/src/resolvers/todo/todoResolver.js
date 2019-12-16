@@ -1,6 +1,5 @@
 const { find }= require('lodash');
 const { generateIntID, createTodo }= require("../../../utils.js");
-const { getTodoById }= require("../../db/cypher");
 const jwt = require('jsonwebtoken')
 const { CONFIG }= require("../../config/config");
 const { neo4jgraphql } = require('neo4j-graphql-js');
@@ -13,15 +12,12 @@ const todoResolver = {
         allTodos(object, params, ctx, resolveInfo) {
           return neo4jgraphql(object, params, ctx, resolveInfo);
         },
-        todoById: async (root, args, context) => {
+        todoById: async (root, {id}, context) => {
           const session = context.driver.session();
-          try {
-            const queryResults = await session.run(`MATCH (t${id}:Todo{id:${id}}) RETURN t${id}`);
-            const todo = queryResults.records.map(todo => todo.get(`t${args.id}`).properties)
-            return todo[0];
-          } finally{
-            session.close();
-          }
+          const queryResults = await session.run(`MATCH (t${id}:Todo{id:${id}}) RETURN t${id}`);
+          session.close();
+          const todo = queryResults.records.map(todo => todo.get(`t${id}`).properties)
+          return todo[0];
         },
     },
     Mutation: {
