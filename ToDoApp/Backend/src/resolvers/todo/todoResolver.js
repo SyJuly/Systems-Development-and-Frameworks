@@ -1,5 +1,6 @@
 const { find }= require('lodash');
-const { generateIntID }= require("../../../utils.js");
+const { generateIntID, createTodo }= require("../../../utils.js");
+const { getTodoById }= require("../../db/cypher");
 const jwt = require('jsonwebtoken')
 const { CONFIG }= require("../../config/config");
 const { neo4jgraphql } = require('neo4j-graphql-js');
@@ -12,32 +13,93 @@ const todoResolver = {
         allTodos(object, params, ctx, resolveInfo) {
           return neo4jgraphql(object, params, ctx, resolveInfo);
         },
-        todoById: (root, args,) => {
-            return find(todos, { id: args.id });
+        todoById: async (root, args, context) => {
+          const session = context.driver.session();
+          try {
+            const queryResults = await session.run(`MATCH (t${id}:Todo{id:${id}}) RETURN t${id}`);
+            const todo = queryResults.records.map(todo => todo.get(`t${args.id}`).properties)
+            return todo[0];
+          } finally{
+            session.close();
+          }
         },
     },
     Mutation: {
-        addTodo: (_, { message, token }) => {
+        addTodo: async (_, { message, token }, context) => {
           const decoded = jwt.verify(token, CONFIG.JWT_SECRET)
           const userId = decoded.id
-            todos.push({
-                id: generateIntID(),
-                message: message,
-                finished: false,
-                creator: userId
-            });
-            return todos;
+          const session = context.driver.session();
+          const todo = {
+            id: generateIntID(),
+            message: message,
+            finished: false
+          }
+          try {
+            await session.run(
+                'CREATE (t$id:Todo {id: $id, message: $message, finished: $finished}) RETURN t$id',
+                {
+                  id:todo.id,
+                  message:todo.message,
+                  finished:todo.finished
+                }
+            );
+          } finally {
+            session.close()
+          }
+
+          const createPublishedRealtion = context.driver.session();
+          try {
+            await createPublishedRealtion.run(
+                'MATCH (u:User{id:$userId}), (t:Todo{id:$todoId}) \n' +
+                'MERGE (u)-[:PUBLISHED]->(t)\n',
+                {
+                  userId,
+                  todoId: todo.id
+                }
+            );
+          } finally {
+            createPublishedRealtion.close()
+          }
+
+          return [todo];
+
         },
-        updateTodo: (_, {id, token, message, finished}) => {
+        updateTodo: async (_, {id, token, message, finished}, context) => {
           const decoded = jwt.verify(token, CONFIG.JWT_SECRET)
           const userId = decoded.id
-            const todo = find(todos, {id: id});
-            if (todo.creator !== userId) {
-                throw new Error(`Your are not the creator of todo:  id ${id}`);
-            }
-            todo.message = message;
-            todo.finished = finished;
-            return todo;
+          const session = context.driver.session();
+          let updatedTodo = {};
+          try {
+            const queryResults = await session.run(`MATCH (t${id}:Todo{id:${id}}) RETURN t${id}`);
+            const todo = queryResults.records.map(todo => todo.get(`t${id}`).properties)[0];
+            /*if (todo.creator !== userId) {
+              throw new Error(`Your are not the creator of todo:  id ${id}`);
+            }*/
+
+            updatedTodo = {...todo};
+            updatedTodo.message = message;
+            updatedTodo.finished = finished;
+          } finally{
+            session.close();
+          }
+
+          const updateTodoSession = context.driver.session();
+          try {
+            console.log(updatedTodo);
+            await updateTodoSession.run(
+                'MATCH (t:Todo{id:$id}) \n' +
+                'SET t = {id: $id, message: $message, finished:$finished}',
+                {
+                  id:updatedTodo.id,
+                  message: updatedTodo.message,
+                  finished: updatedTodo.finished
+                }
+            );
+          } finally {
+            updateTodoSession.close()
+          }
+
+          return updatedTodo;
         },
         deleteTodo: (_, {id, token}) => {
             const decoded = jwt.verify(token, CONFIG.JWT_SECRET)

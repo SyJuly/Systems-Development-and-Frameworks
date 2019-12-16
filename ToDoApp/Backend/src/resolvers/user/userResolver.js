@@ -9,8 +9,8 @@ const { neo4jgraphql } = require('neo4j-graphql-js');
 const userResolver = {
   Query: {
     //allUsers: () => users,
-    allUsers(object, params, ctx, resolveInfo) {
-      return neo4jgraphql(object, params, ctx, resolveInfo);
+    allUsers(object, params, context, resolveInfo) {
+      return neo4jgraphql(object, params, context, resolveInfo);
     }
   },
   Mutation: {

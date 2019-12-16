@@ -1,10 +1,12 @@
 const { ApolloServer, makeExecutableSchema } = require('apollo-server');
 const { mergeResolvers } = require("merge-graphql-schemas");
 const neo4j = require('neo4j-driver');
+const { augmentSchema } = require("neo4j-graphql-js");
 
 const driver = neo4j.driver(
     'bolt://localhost',
-    neo4j.auth.basic('neo4j', 'password')
+    neo4j.auth.basic('neo4j', 'password'),
+    { disableLosslessIntegers: true }
 )
 
 // The ApolloServer constructor requires two parameters: your schema
@@ -18,8 +20,9 @@ const resolvers = mergeResolvers([userResolver, todoResolver]);
 
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
+const augmentedSchema = augmentSchema(schema);
 
-const server = new ApolloServer({ schema, context: { driver } });
+const server = new ApolloServer({ schema: augmentedSchema, context: { driver } });
 
 // The `listen` method launches a web server.
 server.listen().then(({ url }) => {
