@@ -1,4 +1,3 @@
-const { find }= require('lodash');
 const { generateUUID }= require("../../../utils.js");
 const jwt = require('jsonwebtoken')
 const { CONFIG }= require("../../config/config");
