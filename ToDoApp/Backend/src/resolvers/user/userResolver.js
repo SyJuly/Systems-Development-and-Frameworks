@@ -68,6 +68,7 @@ const userResolver = {
             if (!valid) {
                 throw new Error('Incorrect password');
             }
+            session.close();
             const token = jwt.sign({
                 id: userFromEmail.id,
                 email: userFromEmail.email
