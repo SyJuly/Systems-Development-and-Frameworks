@@ -11,7 +11,6 @@ const createUsers = async(driver) =>{
     await session.close();
   })
 }
-
 const createTodos = (driver) =>{
   todos.forEach(async todo => {
     console.log("creating todo")

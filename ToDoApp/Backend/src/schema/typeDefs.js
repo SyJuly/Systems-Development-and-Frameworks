@@ -17,6 +17,7 @@ const typeDefs = gql`
   }
   type Query {
     todoById(id: String!): Todo
+    userById(id: String!):User
     allTodos: [Todo]
     allUsers: [User]
   }

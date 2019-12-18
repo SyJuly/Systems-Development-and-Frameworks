@@ -3,13 +3,14 @@ const jwt = require('jsonwebtoken')
 const { CONFIG }= require("../../config/config");
 const { neo4jgraphql } = require('neo4j-graphql-js');
 
-
-// Resolvers define the technique for fetching the types defined in the
-// schema. This resolver retrieves books from the "books" array above.
 const todoResolver = {
     Query: {
-        allTodos(object, params, ctx, resolveInfo) {
-          return neo4jgraphql(object, params, ctx, resolveInfo);
+        allTodos: async (parent, args, context) => {
+         const session = context.driver.session();
+         const queryResults = await session.run('MATCH(t:Todo)RETURN t LIMIT 3 ');
+         const todos = queryResults.records.map(todo => todo.get(`t`).properties);
+         session.close()
+         return todos;
         },
         todoById: async (root, {id}, context) => {
           const session = context.driver.session();
@@ -38,7 +39,6 @@ const todoResolver = {
           );
           session.close()
           return [todo];
-
         },
         updateTodo: async (_, {id, token, message, finished}, context) => {
           const decoded = jwt.verify(token, CONFIG.JWT_SECRET)
@@ -55,7 +55,6 @@ const todoResolver = {
           if (todo == null) {
             throw new Error(`Your are not the creator of todo:  id ${id}`);
           }
-
           let updatedTodo = {...todo};
           updatedTodo.message = message;
           updatedTodo.finished = finished;

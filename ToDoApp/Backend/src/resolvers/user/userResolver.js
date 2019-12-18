@@ -19,9 +19,24 @@ const {
 
 const userResolver = {
     Query: {
-        allUsers(object, params, context, resolveInfo) {
-            return neo4jgraphql(object, params, context, resolveInfo);
-        }
+        allUsers: async (parent, args, context) => {
+            const session = context.driver.session();
+            const queryResults = await session.run('MATCH(u:User)RETURN u ORDER BY u.name DESC ');
+            const users = queryResults.records.map(user => user.get(`u`).properties);
+            session.close()
+            return users;
+        },
+        userById: async (root, {
+            id
+        }, context) => {
+            const session = context.driver.session();
+            const queryResults = await session.run('MATCH(u:User) WHERE u.id = $id RETURN u', {
+                id: id
+            });
+            session.close();
+            return queryResults.records[0].get("u").properties;
+
+        },
     },
     Mutation: {
         signup: async (_, {
@@ -50,10 +65,18 @@ const userResolver = {
                 );
             }
             session.close();
-            const token = jwt.sign({id: userID,email: email}, CONFIG.JWT_SECRET, {expiresIn: '1y' });
+            const token = jwt.sign({
+                id: userID,
+                email: email
+            }, CONFIG.JWT_SECRET, {
+                expiresIn: '1y'
+            });
             return token;
         },
-        login: async (_, { email, password  }, context) => {
+        login: async (_, {
+            email,
+            password
+        }, context) => {
             const session = context.driver.session();
             const queryResults = await session.run(
                 'MATCH (u:User {email:$email}) RETURN u', {

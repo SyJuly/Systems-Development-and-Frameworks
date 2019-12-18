@@ -18,7 +18,6 @@ describe('query', () => {
             });
             expect(res.data.allTodos).toHaveLength(2);
         });
-
         it('returns todo-message for given id', async () => {
             const res = await query({
                 query: GET_FIRST_TODOMESSAGE
