@@ -1,13 +1,25 @@
 const { mergeResolvers } = require("merge-graphql-schemas");
 const { createTestClient } = require('apollo-server-testing');
-const { ApolloServer, gql } = require('apollo-server');
+const { ApolloServer, gql, makeExecutableSchema } = require('apollo-server');
 const { typeDefs } = require("../../schema/typeDefs");
 const { userResolver } = require("../user/userResolver");
 const { todoResolver } = require("./todoResolver");
+const { augmentSchema } = require("neo4j-graphql-js");
+const neo4j = require('neo4j-driver');
 
+const driver = neo4j.driver(
+    'bolt://localhost',
+    neo4j.auth.basic('neo4j', 'password'),
+    { disableLosslessIntegers: true }
+)
 const resolvers = mergeResolvers([userResolver, todoResolver]);
 
-const server = new ApolloServer({typeDefs, resolvers});
+
+const schema = makeExecutableSchema({ typeDefs, resolvers });
+const augmentedSchema = augmentSchema(schema);
+
+const server = new ApolloServer({ schema: augmentedSchema, context: { driver } });
+
 const { query, mutate } = createTestClient(server);
 
 describe('query', () => {
@@ -16,6 +28,7 @@ describe('query', () => {
             const res = await query({
                 query: GET_ALL_TODOS
             });
+            console.log(res);
             expect(res.data.allTodos).toHaveLength(2);
         });
         it('returns todo-message for given id', async () => {
