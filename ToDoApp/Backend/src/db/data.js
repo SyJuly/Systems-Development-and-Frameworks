@@ -14,13 +14,13 @@ let todos = [{
 
 let users = [{
   id: '1',
-  name: 'testuser',
+  name: 'eva testuser',
   email: 'your@email.com',
   password: '$2y$10$3IUx11G0mcJfSpFWn3Lru.xac9OqHDzqLOAhdZovaUyKa2DhgCaOS' // "password"
 },
   {
     id: '2',
-    name: '2. testuser',
+    name: 'anna testuser',
     email: '2your@email.com',
     password: '$2y$10$3IUx11G0mcJfSpFWn3Lru.xac9OqHDzqLOAhdZovaUyKa2DhgCaOS' // "password"
   }

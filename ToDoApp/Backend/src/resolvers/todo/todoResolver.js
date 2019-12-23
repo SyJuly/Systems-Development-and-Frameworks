@@ -7,18 +7,21 @@ const todoResolver = {
     Query: {
         allTodos: async (parent, args, context) => {
          const session = context.driver.session();
-         const queryResults = await session.run('MATCH(t:Todo)RETURN t LIMIT 3 ');
-         const todos = queryResults.records.map(todo => todo.get(`t`).properties);
+         const queryResults = await session.run('MATCH(t:Todo) RETURN t LIMIT 1');
+         const todos = queryResults.records.map(todo => todo.get('t').properties);
          session.close()
          return todos;
         },
         todoById: async (root, {id}, context) => {
-          const session = context.driver.session();
-          const queryResults = await session.run(`MATCH (t${id}:Todo{id:${id}}) RETURN t${id}`);
-          session.close();
-          const todo = queryResults.records.map(todo => todo.get(`t${id}`).properties)
-          return todo[0];
-        },
+                  const session = context.driver.session();
+                  const queryResults = await session.run('MATCH (t:Todo {id: $id}) RETURN t',
+                  {
+                    id:id
+                  });
+                  session.close();
+                  const todo = queryResults.records.map(todo => todo.get('t').properties)
+                  return todo[0];
+                },
     },
     Mutation: {
         addTodo: async (_, { message, token }, context) => {
@@ -51,7 +54,7 @@ const todoResolver = {
                 userId
               }
           )
-          const todo = queryResults.records.map(todo => todo.get(`t`).properties)[0];
+          const todo = queryResults.records.map(todo => todo.get('t').properties)[0];
           if (todo == null) {
             throw new Error(`Your are not the creator of todo:  id ${id}`);
           }

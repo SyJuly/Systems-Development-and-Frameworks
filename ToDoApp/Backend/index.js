@@ -14,17 +14,14 @@ const driver = neo4j.driver(
 // definition and your set of resolvers.
 const { typeDefs } = require('./src/schema/typeDefs');
 
-
 const { userResolver } = require("./src/resolvers/user/userResolver");
 const { todoResolver } = require("./src/resolvers/todo/todoResolver");
 const resolvers = mergeResolvers([userResolver, todoResolver]);
-
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 const augmentedSchema = augmentSchema(schema);
 
 const server = new ApolloServer({ schema: augmentedSchema, context: { driver } });
-
 
 if (process.argv.length === 3 && process.argv[2] === "--seed") {
   seedDatabase(driver)

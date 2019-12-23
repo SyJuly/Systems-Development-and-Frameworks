@@ -21,7 +21,7 @@ const userResolver = {
     Query: {
         allUsers: async (parent, args, context) => {
             const session = context.driver.session();
-            const queryResults = await session.run('MATCH(u:User)RETURN u ORDER BY u.name DESC ');
+            const queryResults = await session.run('MATCH(u:User)RETURN u ORDER BY u.name ASC ');
             const users = queryResults.records.map(user => user.get(`u`).properties);
             session.close()
             return users;
@@ -102,5 +102,4 @@ const userResolver = {
         }
     }
 }
-
 module.exports.userResolver = userResolver;

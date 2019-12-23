@@ -28,5 +28,7 @@
         RETURN n
 
 ##### Clear database from everything
+        start r=relationship(*) delete r;
+
         MATCH (n)
         DETACH DELETE n
