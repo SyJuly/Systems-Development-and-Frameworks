@@ -1,8 +1,11 @@
-language: node_js
+language: generic
 node_js:
   - "stable"
 env:
   - NEO4J_VERSION="3.5.14"
+dist: xenial
+snaps:
+- docker
 jobs:
   include:
     - stage: "Backend"
@@ -14,6 +17,9 @@ jobs:
       install:
         - cd ./ToDoApp/Backend
         - npm install
+      before_script:
+      - docker-compose up
+      - wait-on http://localhost:7474
       script:
         - npm test
     - stage: "Frontend"
@@ -23,3 +29,11 @@ jobs:
       script:
         - npm test
         - npm run lint
+
+
+before_script:
+- docker-compose up
+- wait-on http://localhost:7474
+
+script:
+- echo "Run your tests here"
