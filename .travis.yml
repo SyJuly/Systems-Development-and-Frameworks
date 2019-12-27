@@ -1,16 +1,16 @@
 language: node_js
 node_js:
   - "stable"
-env:
-  - NEO4J_VERSION="3.5.14"
-before_install:
-  - wget dist.neo4j.org/neo4j-community-$NEO4J_VERSION-unix.tar.gz
-  - tar -xzf neo4j-community-$NEO4J_VERSION-unix.tar.gz
-  - neo4j-community-$NEO4J_VERSION/bin/neo4j-admin set-initial-password password
-  - neo4j-community-$NEO4J_VERSION/bin/neo4j start
 jobs:
   include:
     - stage: "Backend"
+      env:
+      - NEO4J_VERSION="3.5.14"
+      before_install:
+      - wget dist.neo4j.org/neo4j-community-$NEO4J_VERSION-unix.tar.gz
+      - tar -xzf neo4j-community-$NEO4J_VERSION-unix.tar.gz
+      - neo4j-community-$NEO4J_VERSION/bin/neo4j-admin set-initial-password password
+      - neo4j-community-$NEO4J_VERSION/bin/neo4j start
       install:
         - cd ./ToDoApp/Backend
         - npm install
