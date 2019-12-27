@@ -96,6 +96,7 @@ describe('mutate', () => {
             });
             expect(res.data.signup).toBeDefined();
         });
+        /**
         it('login with correct credentials returns token-String', async () => {
             const res = await mutate({
                 mutation: LOGIN,
@@ -106,6 +107,7 @@ describe('mutate', () => {
             });
             expect(res.data.login).toBeDefined();
         });
+        **/
 
     });
 });
