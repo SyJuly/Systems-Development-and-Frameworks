@@ -21,9 +21,6 @@ jobs:
       install:
         - cd ./ToDoApp/Frontend
         - npm install
-      before_script:
-      - npm run ./ToDoApp/Backend:seed
-      - wait-on http://localhost:7474
       script:
         - npm test
         - npm run lint
