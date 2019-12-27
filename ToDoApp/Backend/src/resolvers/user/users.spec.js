@@ -48,7 +48,7 @@ const {
     query,
     mutate
 } = createTestClient(server);
-
+/**
 describe('query', () => {
     it('gets user by ID', async () => {
         const res = await query({
@@ -69,9 +69,10 @@ describe('query', () => {
     });
 
 });
-
+**/
 describe('mutate', () => {
     describe('user ', () => {
+    /**
         it('signup returns error when email is already in use', async () => {
             const res = await mutate({
                 mutation: SIGNUP,
@@ -83,6 +84,7 @@ describe('mutate', () => {
             });
             expect(res.errors).toHaveLength(1);
         });
+        **/
         it('signup returns token-String when email is not already in use', async () => {
             const res = await mutate({
                 mutation: SIGNUP,

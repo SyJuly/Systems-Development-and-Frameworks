@@ -48,7 +48,7 @@ const {
     query,
     mutate
 } = createTestClient(server);
-
+/**
 describe('query', () => {
     describe('todos', () => {
         it('querying all todos returns only 1 Todo because of limit', async () => {
@@ -67,7 +67,7 @@ describe('query', () => {
         });
     });
 });
-
+**/
 describe('mutate', () => {
     var logInToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJlbWFpbCI6InlvdXJAZW1haWwuY29tIiwiaWF0IjoxNTc3MTE3OTQxLCJleHAiOjE2MDg2NzU1NDF9.zf7lZRXKoljUuVZMHTdIH0kD7F8t8qZPmoA6A3sqKHg";
     describe('given user is not logged in/no token', () => {
@@ -94,7 +94,9 @@ describe('mutate', () => {
             expect(res.data.addTodo[0].message).toEqual("neues Todo");
         });
         describe('Modifying Todos', () => {
+         /**
             describe('given the loggedIn-User is the creator of the todo (allowed to modify)', () => {
+
                 it('updates todo message ', async () => {
                     const res = await mutate({
                         mutation: UPDATE_TODO_MESSAGE,
@@ -118,7 +120,9 @@ describe('mutate', () => {
                     expect(res.data.deleteTodo.id).toEqual("1");
 
                 });
+
             });
+              **/
             describe('given the loggedIn-User is NOT the creator of the todo (NOT allowed to modify)', () => {
                 it('does not delete the todo', async () => {
                     const res = await mutate({
