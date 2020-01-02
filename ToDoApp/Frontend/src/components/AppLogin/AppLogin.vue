@@ -1,9 +1,8 @@
 <template>
-  <div>
-    <h4 class='mv3'>{{login ? 'Login' : 'Sign Up'}}</h4>
+  <div v-show="!isLoggedIn">
     <div class='flex flex-column'>
       <input
-        v-show="!login"
+        v-show="!canLogin"
         v-model="name"
         type="text"
         placeholder="Your name">
@@ -15,19 +14,13 @@
         v-model="password"
         type="password"
         placeholder="Password">
+      <b-button @click="authenticate" >{{canLogin ? 'Login' : 'Sign Up'}}</b-button>
     </div>
     <div class='flex mt3'>
-   <!--
-      <b-button variant="success"
-        class='pointer mr2 button'
-        @click="confirm()">
-        {{login ? 'login' : 'create account'}}
-      </b-button>
-    -->
       <div
         class='pointer button'
-        @click="login = !login">
-        {{login ? 'need to create an account?' : 'already have an account?'}}
+        @click="canLogin = !canLogin">
+        {{canLogin ? 'need to create an account?' : 'already have an account?'}}
       </div>
     </div>
   </div>
@@ -35,27 +28,49 @@
 
 <script>
 
- // import { GC_USER_ID, GC_AUTH_TOKEN } from '../../constants/settings'
-
+  import { BButton } from 'bootstrap-vue'
+  import { LOGIN } from '../../graphql/queries'
 
   export default {
     name: 'AppLogin',
+    components: {
+      'b-button' : BButton,
+    },
     data () {
       return {
         email: '',
-        login: true,
+        canLogin: true,
+        isLoggedIn: false,
         name: '',
         password: ''
       }
     },
     methods: {
-      confirm () {
-        // ... you'll implement this in a bit
+      authenticate () {
+        if(this.isLoggedIn){ return}
+        if (this.canLogin){
+          this.login();
+        } else {
+          this.signup();
+        }
       },
-      saveUserData (id, token) {
-        localStorage.setItem(GC_USER_ID, id)
-        localStorage.setItem(GC_AUTH_TOKEN, token)
-        this.$root.$data.userId = localStorage.getItem(GC_USER_ID)
+      login(){
+        this.$apollo
+          .mutate({
+            mutation: LOGIN,
+            variables: {
+              email: this.email,
+              password: this.password
+            }
+          })
+          .then((data) => {
+            console.log(data);
+            localStorage.setItem("auth-token", data.data.login);
+            this.isLoggedIn = true;
+          })
+      },
+      signup(){
+        //
       }
     }
   }
