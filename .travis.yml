@@ -25,11 +25,3 @@ jobs:
       script:
         - npm test
         - npm run lint
-
-
-before_script:
-- docker-compose up
-- wait-on http://localhost:7474
-
-script:
-- echo "Run your tests here"
