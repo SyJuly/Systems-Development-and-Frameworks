@@ -8,7 +8,8 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "test": "jest"
+    "test": "jest --verbose -u --detectOpenHandles"
+
   },
   "dependencies": {
     "apollo-server": "^2.9.9",
