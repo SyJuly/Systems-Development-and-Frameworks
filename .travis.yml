@@ -15,8 +15,7 @@ jobs:
         - cd ./ToDoApp/Backend
         - npm install
       before_install:
-      - docker-compose up
-      - wait-on http://localhost:7474
+      - docker-compose up -d
       script:
         - npm test
     - stage: "Frontend"
