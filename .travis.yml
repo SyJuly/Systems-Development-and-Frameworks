@@ -1,12 +1,21 @@
 language: node_js
 node_js:
   - "stable"
+env:
+  - NEO4J_VERSION="3.5.14"
+dist: xenial
+snaps:
+  - docker
+services:
+  - neo4j
 jobs:
   include:
     - stage: "Backend"
       install:
         - cd ./ToDoApp/Backend
         - npm install
+      before_install:
+      - docker-compose up -d
       script:
         - npm test
     - stage: "Frontend"
