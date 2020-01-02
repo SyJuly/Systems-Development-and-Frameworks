@@ -3,6 +3,7 @@ const { mergeResolvers } = require("merge-graphql-schemas");
 const neo4j = require('neo4j-driver');
 const { augmentSchema } = require("neo4j-graphql-js");
 const { seedDatabase } = require("./src/db/seed");
+const { getAuth } = require("./src/utils/auth");
 
 const driver = neo4j.driver(
     'bolt://localhost',
@@ -21,7 +22,12 @@ const resolvers = mergeResolvers([userResolver, todoResolver]);
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 const augmentedSchema = augmentSchema(schema);
 
-const server = new ApolloServer({ schema: augmentedSchema, context: { driver } });
+const server = new ApolloServer({ schema: augmentedSchema, context:({req}) => {
+  return({
+    driver,
+    authorization: getAuth(req),
+  })}
+});
 
 if (process.argv.length === 3 && process.argv[2] === "--seed") {
   seedDatabase(driver)

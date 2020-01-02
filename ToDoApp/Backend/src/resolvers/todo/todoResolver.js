@@ -1,7 +1,4 @@
 const { generateUUID }= require("../../../utils.js");
-const jwt = require('jsonwebtoken')
-const { CONFIG }= require("../../config/config");
-const { neo4jgraphql } = require('neo4j-graphql-js');
 
 const todoResolver = {
     Query: {
@@ -25,8 +22,8 @@ const todoResolver = {
     },
     Mutation: {
         addTodo: async (_, { message, token }, context) => {
-          const decoded = jwt.verify(token, CONFIG.JWT_SECRET)
-          const userId = decoded.id
+          const userId = context.authorization.userId;
+          console.log(userId);
           const session = context.driver.session();
           const todo = {
             id: generateUUID(),
@@ -44,8 +41,7 @@ const todoResolver = {
           return [todo];
         },
         updateTodo: async (_, {id, token, message, finished}, context) => {
-          const decoded = jwt.verify(token, CONFIG.JWT_SECRET)
-          const userId = decoded.id
+          const userId = context.authorization.userId;
           const session = context.driver.session();
           const queryResults = await session.run(
               'MATCH (t:Todo{id:$todoId}) <-[r:PUBLISHED]-(u:User{id:$userId}) RETURN t',
@@ -70,8 +66,7 @@ const todoResolver = {
           return updatedTodo;
         },
         deleteTodo: async (_, {id, token}, context) => {
-            const decoded = jwt.verify(token, CONFIG.JWT_SECRET)
-            const userId = decoded.id
+            const userId = context.authorization.userId;
             const session = context.driver.session();
             const queryResults = await session.run(
                 'MATCH (t:Todo{id:$todoId}) <-[r:PUBLISHED]-(u:User{id:$userId}) RETURN t',

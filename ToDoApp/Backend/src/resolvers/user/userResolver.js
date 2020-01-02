@@ -1,20 +1,11 @@
-const {
-    find
-} = require('lodash');
-const {
-    generateUUID
-} = require("../../../utils.js");
-const {
-    CONFIG
-} = require("../../config/config");
+const { find } = require('lodash');
+const { generateUUID } = require("../../../utils.js");
+const { CONFIG } = require("../../config/config");
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const {
-    neo4jgraphql
-} = require('neo4j-graphql-js');
-const {
-    users
-} = require('../../db/data')
+const { neo4jgraphql } = require('neo4j-graphql-js');
+const { users } = require('../../db/data')
+const { getToken } = require('../../utils/auth')
 
 
 const userResolver = {
@@ -65,13 +56,7 @@ const userResolver = {
                 );
             }
             session.close();
-            const token = jwt.sign({
-                id: userID,
-                email: email
-            }, CONFIG.JWT_SECRET, {
-                expiresIn: '1y'
-            });
-            return token;
+            return getToken(userID, email);
         },
         login: async (_, {
             email,
@@ -92,13 +77,7 @@ const userResolver = {
                 throw new Error('Incorrect password');
             }
             session.close();
-            const token = jwt.sign({
-                id: userFromEmail.id,
-                email: userFromEmail.email
-            }, CONFIG.JWT_SECRET, {
-                expiresIn: '1y'
-            });
-            return token;
+            return getToken(userFromEmail.id, userFromEmail.email);
         }
     }
 }
