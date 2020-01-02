@@ -4,9 +4,9 @@ const { CONFIG }= require("../config/config");
 
 const getAuth = (req) => {
   const authToken = req.get('auth-token');
-  if(authToken == null){
+  /*if(authToken == null){
     throw new AuthenticationError("You have to be logged in.");
-  }
+  }*/
   return getContextAuthorizationObject(authToken);
 }
 

@@ -4,6 +4,8 @@ const neo4j = require('neo4j-driver');
 const { augmentSchema } = require("neo4j-graphql-js");
 const { seedDatabase } = require("./src/db/seed");
 const { getAuth } = require("./src/utils/auth");
+const { applyMiddleware } = require ('graphql-middleware');
+const { permissions } = require ('./src/config/permissions');
 
 const driver = neo4j.driver(
     'bolt://localhost',
