@@ -49,7 +49,7 @@ describe('mutate', () => {
                 mutation: SIGNUP,
                 variables: {
                     name: "eva",
-                    email: "neue@email.com",
+                    email: "a@email.com",
                     password: "password"
                 }
             });

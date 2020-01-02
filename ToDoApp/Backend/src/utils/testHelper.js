@@ -27,12 +27,16 @@ const getTestApolloServer = (loggedIn ) => {
     schema: augmentedSchema,
     context: {
       driver,
-      authorization: loggedIn ? {
-        token: getToken(users[0].id, users[0].email),
-        userId: users[0].id,
-      } : {}
+      authorization: loggedIn ? getTestAuthorizationObject() : {}
     }
   })
+}
+
+const getTestAuthorizationObject = () => {
+  return {
+    token: getToken(users[0].id, users[0].email),
+    userId: users[0].id,
+  }
 }
 
 

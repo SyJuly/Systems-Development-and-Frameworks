@@ -2,16 +2,9 @@ const { createTestClient } = require('apollo-server-testing');
 const { gql} = require('apollo-server');
 const { getTestApolloServer } = require('../../utils/testHelper');
 
-/*const {
-    query,
-    mutate,
-} = createTestClient(getTestApolloServer(true));*/
+const clientLoggedOut = createTestClient(getTestApolloServer(false));
 
-const {
-    query,
-    mutate
-} = createTestClient(getTestApolloServer(true));
-
+const clientLoggedIn= createTestClient(getTestApolloServer(true));
 
 /**
 describe('query', () => {
@@ -34,10 +27,10 @@ describe('query', () => {
 });
 **/
 describe('mutate', () => {
-    var logInToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJlbWFpbCI6InlvdXJAZW1haWwuY29tIiwiaWF0IjoxNTc3MTE3OTQxLCJleHAiOjE2MDg2NzU1NDF9.zf7lZRXKoljUuVZMHTdIH0kD7F8t8qZPmoA6A3sqKHg";
-    describe('given user is not logged in/no token', () => {
+
+  describe('given user is not logged in/no token', () => {
         it('creating a todo returns an error', async () => {
-            const res = await mutate({
+            const res = await clientLoggedOut.mutate({
                 mutation: CREATE_TODO,
                 variables: {
                     message: "neues Todo"
@@ -48,12 +41,13 @@ describe('mutate', () => {
     });
     describe('give user is loggedIn', () => {
         it('adds a todo', async () => {
-            const res = await mutate({
+            const res = await clientLoggedIn.mutate({
                 mutation: CREATE_TODO,
                 variables: {
                     message: "neues Todo"
                 }
             });
+            console.log(res.errors);
             expect(res.data.addTodo[0].message).toEqual("neues Todo");
         });
         describe('Modifying Todos', () => {
@@ -88,11 +82,10 @@ describe('mutate', () => {
               **/
             describe('given the loggedIn-User is NOT the creator of the todo (NOT allowed to modify)', () => {
                 it('does not delete the todo', async () => {
-                    const res = await mutate({
+                    const res = await clientLoggedIn.mutate({
                         mutation: DELETE_TODO,
                         variables: {
-                            id: "2",
-                            token: logInToken
+                            id: "2"
                         }
                     });
                     expect(res.data.deleteTodo).toBeNull();
@@ -101,6 +94,12 @@ describe('mutate', () => {
         });
     });
 });
+
+const LOGIN = gql `
+      mutation login($email: String!, $password: String!) {
+          login(email: $email, password: $password)
+      }
+  `;
 
 const GET_ALL_TODOS = gql `
                          query {
@@ -120,8 +119,8 @@ const GET_FIRST_TODOMESSAGE = gql `
                   `;
 
 const CREATE_TODO = gql `
-                mutation addTodo($message: String, $token: String){
-                   addTodo(message: $message , token: $token)
+                mutation addTodo($message: String){
+                   addTodo(message: $message)
                     {
                       message
                     }
@@ -129,8 +128,8 @@ const CREATE_TODO = gql `
                 `;
 
 const DELETE_TODO = gql `
-        mutation deleteTodo($id: String, $token:String) {
-            deleteTodo(id: $id, token:$token)
+        mutation deleteTodo($id: String) {
+            deleteTodo(id: $id)
             {
               id
               message
@@ -139,8 +138,8 @@ const DELETE_TODO = gql `
     `;
 
 const UPDATE_TODO_MESSAGE = gql `
-          mutation updateTodo( $id: String, $message: String, $finished: Boolean, $token:String) {
-              updateTodo(id: $id, message: $message, finished:$finished, token:$token)
+          mutation updateTodo( $id: String, $message: String, $finished: Boolean) {
+              updateTodo(id: $id, message: $message, finished:$finished)
               {
                 message
               }

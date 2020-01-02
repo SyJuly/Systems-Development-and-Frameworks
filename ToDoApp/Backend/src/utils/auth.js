@@ -7,11 +7,7 @@ const getAuth = (req) => {
   if(authToken == null){
     throw new AuthenticationError("You have to be logged in.");
   }
-  const decoded = jwt.verify(authToken, CONFIG.JWT_SECRET)
-  return({
-    token: authToken,
-    userId: decoded.id,
-  })
+  return getContextAuthorizationObject(authToken);
 }
 
 const getToken = (userID, email) => {
@@ -21,6 +17,14 @@ const getToken = (userID, email) => {
   }, CONFIG.JWT_SECRET, {
     expiresIn: '1y'
   });
+}
+
+const getContextAuthorizationObject = (authToken) => {
+  const decoded = jwt.verify(authToken, CONFIG.JWT_SECRET)
+  return({
+    token: authToken,
+    userId: decoded.id,
+  })
 }
 
 module.exports.getToken = getToken;
