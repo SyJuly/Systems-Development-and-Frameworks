@@ -1,53 +1,12 @@
-const {
-    mergeResolvers
-} = require("merge-graphql-schemas");
-const {
-    createTestClient
-} = require('apollo-server-testing');
-const {
-    ApolloServer,
-    gql,
-    makeExecutableSchema
-} = require('apollo-server');
-const {
-    typeDefs
-} = require("../../schema/typeDefs");
-const {
-    userResolver
-} = require("./userResolver");
-const {
-    todoResolver
-} = require("../todo/todoResolver");
-const {
-    augmentSchema
-} = require("neo4j-graphql-js");
-const neo4j = require('neo4j-driver');
-
-const driver = neo4j.driver(
-    'bolt://localhost',
-    neo4j.auth.basic('neo4j', 'password'), {
-        disableLosslessIntegers: true
-    }
-)
-const resolvers = mergeResolvers([userResolver, todoResolver]);
-
-const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers
-});
-const augmentedSchema = augmentSchema(schema);
-
-const server = new ApolloServer({
-    schema: augmentedSchema,
-    context: {
-        driver
-    }
-});
+const { createTestClient } = require('apollo-server-testing');
+const { gql} = require('apollo-server');
+const { getTestApolloServer } = require('../../utils/testHelper');
 
 const {
     query,
     mutate
-} = createTestClient(server);
+} = createTestClient(getTestApolloServer(false));
+
 /**
 describe('query', () => {
     it('gets user by ID', async () => {
