@@ -36,7 +36,7 @@ describe('mutate', () => {
                     message: "neues Todo"
                 }
             });
-            expect(res.errors).toHaveLength(1);
+            expect(res.errors[0].message).toEqual("Not Authorised!");
         });
     });
     describe('give user is loggedIn', () => {
@@ -90,7 +90,7 @@ describe('mutate', () => {
                     expect(res.data.deleteTodo).toBeNull();
                 });
             });
-        });
+        })
     });
 });
 
