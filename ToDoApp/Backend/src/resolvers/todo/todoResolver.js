@@ -21,9 +21,8 @@ const todoResolver = {
                 },
     },
     Mutation: {
-        addTodo: async (_, { message, token }, context) => {
-          const userId = context.authorization.userId;
-          console.log(userId);
+        addTodo: async (parent, { message, token }, context) => {
+          const userId = context.auth.userId;
           const session = context.driver.session();
           const todo = {
             id: generateUUID(),
@@ -41,7 +40,7 @@ const todoResolver = {
           return [todo];
         },
         updateTodo: async (_, {id, token, message, finished}, context) => {
-          const userId = context.authorization.userId;
+          const userId = context.auth.userId;
           const session = context.driver.session();
           const queryResults = await session.run(
               'MATCH (t:Todo{id:$todoId}) <-[r:PUBLISHED]-(u:User{id:$userId}) RETURN t',
@@ -66,7 +65,7 @@ const todoResolver = {
           return updatedTodo;
         },
         deleteTodo: async (_, {id, token}, context) => {
-            const userId = context.authorization.userId;
+            const userId = context.auth.userId;
             const session = context.driver.session();
             const queryResults = await session.run(
                 'MATCH (t:Todo{id:$todoId}) <-[r:PUBLISHED]-(u:User{id:$userId}) RETURN t',

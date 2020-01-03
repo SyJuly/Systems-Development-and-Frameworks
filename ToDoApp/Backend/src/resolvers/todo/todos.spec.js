@@ -47,7 +47,6 @@ describe('mutate', () => {
                     message: "neues Todo"
                 }
             });
-            console.log(res.errors);
             expect(res.data.addTodo[0].message).toEqual("neues Todo");
         });
         describe('Modifying Todos', () => {

@@ -7,6 +7,8 @@ const { augmentSchema } = require("neo4j-graphql-js");
 const neo4j = require('neo4j-driver');
 const { getToken } = require('./auth')
 const { users } = require('../db/data')
+const { applyMiddleware } = require ('graphql-middleware');
+const { permissions } = require ('../config/permissions');
 
 const driver = neo4j.driver(
     'bolt://localhost',
@@ -20,7 +22,7 @@ const schema = makeExecutableSchema({
   typeDefs,
   resolvers
 });
-const augmentedSchema = augmentSchema(schema);
+const augmentedSchema = augmentSchema(applyMiddleware(schema, permissions));
 
 const getTestApolloServer = (loggedIn ) => {
   return new ApolloServer({
