@@ -7,7 +7,7 @@ const typeDefs = gql`
     id: String!
     message: String
     finished: Boolean
-    creator: [User]
+    creator: User
   }
   type User {
     id: String!
