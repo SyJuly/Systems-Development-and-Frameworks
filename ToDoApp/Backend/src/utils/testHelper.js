@@ -27,7 +27,7 @@ const getTestApolloServer = (loggedIn ) => {
     schema: augmentedSchema,
     context: {
       driver,
-      authorization: loggedIn ? getTestAuthorizationObject() : {}
+      auth: loggedIn ? getTestAuthorizationObject() : {}
     }
   })
 }

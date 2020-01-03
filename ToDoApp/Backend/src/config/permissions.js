@@ -1,11 +1,12 @@
 const { rule, shield, not } =  require('graphql-shield');
 
 const isAuthenticated = rule()(async (parent, args, context) => {
-  return context.authentication !== null || context.authentication !== undefined || context.authentication != {};
+  return context.auth !== null && context.auth !== undefined && context.auth !== {}
 });
 
 const permissions = shield({
-      Query: { },
+  Query: {
+  },
       Mutation: {
         addTodo: isAuthenticated,
         updateTodo: isAuthenticated,
@@ -16,4 +17,4 @@ const permissions = shield({
 
 );
 
-module.exports = permissions;
+module.exports.permissions = permissions;

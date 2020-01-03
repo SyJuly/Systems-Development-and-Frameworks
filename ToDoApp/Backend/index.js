@@ -22,12 +22,12 @@ const { todoResolver } = require("./src/resolvers/todo/todoResolver");
 const resolvers = mergeResolvers([userResolver, todoResolver]);
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
-const augmentedSchema = augmentSchema(schema);
+const augmentedSchema = augmentSchema(applyMiddleware(schema, permissions));
 
 const server = new ApolloServer({ schema: augmentedSchema, context:({req}) => {
   return({
     driver,
-    authorization: getAuth(req),
+    auth: getAuth(req),
   })}
 });
 
