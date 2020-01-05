@@ -7,7 +7,6 @@ const { neo4jgraphql } = require('neo4j-graphql-js');
 const { users } = require('../../db/data')
 const { getToken } = require('../../utils/auth')
 
-
 const userResolver = {
     Query: {
         allUsers: async (parent, args, context) => {
@@ -17,12 +16,12 @@ const userResolver = {
             session.close()
             return users;
         },
-        userById: async (root, {
-            id
+        userByEmail: async (root, {
+            email
         }, context) => {
             const session = context.driver.session();
-            const queryResults = await session.run('MATCH(u:User) WHERE u.id = $id RETURN u', {
-                id: id
+            const queryResults = await session.run('MATCH(u:User) WHERE u.email = $email RETURN u', {
+                email: email
             });
             session.close();
             return queryResults.records[0].get("u").properties;
