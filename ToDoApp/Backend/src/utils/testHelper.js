@@ -45,6 +45,12 @@ const getTestAuthorizationObject = () => {
 }
 
 const cleanDatabase = async (options={}) => {
+    const driver = neo4j.driver(
+        'bolt://localhost',
+        neo4j.auth.basic('neo4j', 'password'), {
+          disableLosslessIntegers: true
+        }
+    )
   const session = driver.session()
   try {
     await session.writeTransaction(transaction => {
@@ -61,6 +67,12 @@ const cleanDatabase = async (options={}) => {
 
 
 const createUser = async (params) => {
+    const driver = neo4j.driver(
+        'bolt://localhost',
+        neo4j.auth.basic('neo4j', 'password'), {
+          disableLosslessIntegers: true
+        }
+    )
     const session = driver.session()
     if (params.id == null) userID = generateUUID();
         else userID = params.id;
@@ -81,6 +93,13 @@ const createUser = async (params) => {
 }
 
 const createTodo = async (params) => {
+    const driver = neo4j.driver(
+        'bolt://localhost',
+        neo4j.auth.basic('neo4j', 'password'), {
+          disableLosslessIntegers: true
+        }
+    )
+
     const session = driver.session()
     if (params.id == null) todoID = generateUUID();
             else todoID = params.id;
