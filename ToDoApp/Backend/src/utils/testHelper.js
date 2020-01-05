@@ -58,8 +58,6 @@ const cleanDatabase = async (options={}) => {
     session.close()
   }
 }
-
-
 const createUser = async (params) => {
     const session = driver.session()
     if (params.id == null) userID = generateUUID();
@@ -100,8 +98,6 @@ const createTodo = async (params) => {
        await session.close()
     }
 }
-
-
 
 module.exports.getTestApolloServer = getTestApolloServer;
 module.exports.cleanDatabase = cleanDatabase;

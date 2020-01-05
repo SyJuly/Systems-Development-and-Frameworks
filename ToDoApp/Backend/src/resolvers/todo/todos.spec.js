@@ -3,7 +3,7 @@ const { gql} = require('apollo-server');
 const { getTestApolloServer,cleanDatabase,createUser,createTodo } = require('../../utils/testHelper');
 
 const clientLoggedIn = createTestClient(getTestApolloServer(true));
-const clientLoggedOut = createTestClient(getTestApolloServer(false));
+
 
 afterEach(async (done) => {
     await cleanDatabase()
@@ -18,6 +18,7 @@ describe('Todos', () => {
 
     })
     describe('user is not logged in', () => {
+        const clientLoggedOut = createTestClient(getTestApolloServer(false));
         it('creating a todo returns an error', async () => {
             const res = await clientLoggedOut.mutate({
                 mutation: CREATE_TODO,
@@ -48,6 +49,7 @@ describe('Todos', () => {
     });
 
     describe('give user is loggedIn', () => {
+        const clientLoggedIn = createTestClient(getTestApolloServer(true));
         it('adds a todo', async () => {
             const res = await clientLoggedIn.mutate({
                 mutation: CREATE_TODO,

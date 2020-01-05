@@ -2,7 +2,8 @@ const { createTestClient } = require('apollo-server-testing');
 const { gql} = require('apollo-server');
 const { getTestApolloServer,cleanDatabase,createUser } = require('../../utils/testHelper');
 
-const {query, mutate} = createTestClient(getTestApolloServer(false));
+
+const {query, mutate} = createTestClient(getTestApolloServer(true));
 
 afterEach(async (done) => {
     await cleanDatabase()
@@ -56,6 +57,7 @@ describe('User', () => {
                     expect(res.data.signup).toBeDefined();
                 });
 
+                const {query, mutate} = createTestClient(getTestApolloServer(false));
                 it('login with correct credentials returns token-String', async () => {
                     const res = await mutate({
                         mutation: LOGIN,
