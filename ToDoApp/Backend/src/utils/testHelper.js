@@ -45,20 +45,15 @@ const getTestAuthorizationObject = () => {
 }
 
 const cleanDatabase = async (options={}) => {
-    const driver = neo4j.driver(
-        'bolt://localhost',
-        neo4j.auth.basic('neo4j', 'password'), {
-          disableLosslessIntegers: true
-        }
-    )
   const session = driver.session()
   try {
-    await session.run(        `
+    await session.writeTransaction(transaction => {
+      return transaction.run(        `
           MATCH (everything)
           DETACH DELETE everything
         `,
       )
-
+    })
   } finally {
     session.close()
   }
@@ -66,43 +61,32 @@ const cleanDatabase = async (options={}) => {
 
 
 const createUser = async (params) => {
-    const driver = neo4j.driver(
-        'bolt://localhost',
-        neo4j.auth.basic('neo4j', 'password'), {
-          disableLosslessIntegers: true
-        }
-    )
     const session = driver.session()
     if (params.id == null) userID = generateUUID();
         else userID = params.id;
 
     try {
-        await session.run(
+        await session.writeTransaction(transaction => {
+            return transaction.run(
                 'CREATE (u:User {id: $id, name: $name, email: $email ,password: $password })', {
                     id: userID,
                     name: params.name,
                     email: params.email,
                     password: bcrypt.hash(params.password, 10).toString(),
                 })
-
+        })
     } finally {
         await session.close()
     }
 }
 
 const createTodo = async (params) => {
-    const driver = neo4j.driver(
-        'bolt://localhost',
-        neo4j.auth.basic('neo4j', 'password'), {
-          disableLosslessIntegers: true
-        }
-    )
-
     const session = driver.session()
     if (params.id == null) todoID = generateUUID();
             else todoID = params.id;
     try {
-        await session.run(
+        await session.writeTransaction(transaction => {
+            return transaction.run(
                 'CREATE (t: Todo {id: $id, message: $message, finished: $finished}) WITH t MATCH (u:User{id:$userId}) MERGE (u)-[:PUBLISHED]->(t)',{
                     id: todoID,
                     message: params.message,
@@ -111,6 +95,7 @@ const createTodo = async (params) => {
 
                 }
             )
+        })
     } finally {
        await session.close()
     }
