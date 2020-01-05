@@ -12,7 +12,6 @@ afterEach(async (done) => {
 
 describe('Todos', () => {
     beforeEach(async () => {
-        createTestClient(getTestApolloServer(true));
         await createUser({ id: "1",  name: 'First Testuser', email: 'first@email.com', password: 'password'  })
         await createTodo({ id: "1",message: 'first todo',finished: false,userId: "2"    })
         await createTodo({ id: "2",message: 'second todo',   finished: false,  userId: "1" })

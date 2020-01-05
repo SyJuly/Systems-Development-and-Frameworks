@@ -45,6 +45,7 @@ const getTestAuthorizationObject = () => {
 }
 
 const cleanDatabase = async (options={}) => {
+  getTestApolloServer(true);
   const session = driver.session()
   try {
     await session.writeTransaction(transaction => {
@@ -59,6 +60,7 @@ const cleanDatabase = async (options={}) => {
   }
 }
 const createUser = async (params) => {
+    getTestApolloServer(true);
     const session = driver.session()
     if (params.id == null) userID = generateUUID();
         else userID = params.id;
@@ -79,6 +81,7 @@ const createUser = async (params) => {
 }
 
 const createTodo = async (params) => {
+    getTestApolloServer(true);
     const session = driver.session()
     if (params.id == null) todoID = generateUUID();
             else todoID = params.id;
