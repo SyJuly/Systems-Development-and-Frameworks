@@ -53,13 +53,12 @@ const cleanDatabase = async (options={}) => {
     )
   const session = driver.session()
   try {
-    await session.writeTransaction(transaction => {
-      return transaction.run(        `
+    await session.run(        `
           MATCH (everything)
           DETACH DELETE everything
         `,
       )
-    })
+
   } finally {
     session.close()
   }
@@ -78,15 +77,14 @@ const createUser = async (params) => {
         else userID = params.id;
 
     try {
-        await session.writeTransaction(transaction => {
-            return transaction.run(
+        await session.run(
                 'CREATE (u:User {id: $id, name: $name, email: $email ,password: $password })', {
                     id: userID,
                     name: params.name,
                     email: params.email,
                     password: bcrypt.hash(params.password, 10).toString(),
                 })
-        })
+
     } finally {
         await session.close()
     }
@@ -104,8 +102,7 @@ const createTodo = async (params) => {
     if (params.id == null) todoID = generateUUID();
             else todoID = params.id;
     try {
-        await session.writeTransaction(transaction => {
-            return transaction.run(
+        await session.run(
                 'CREATE (t: Todo {id: $id, message: $message, finished: $finished}) WITH t MATCH (u:User{id:$userId}) MERGE (u)-[:PUBLISHED]->(t)',{
                     id: todoID,
                     message: params.message,
@@ -114,7 +111,6 @@ const createTodo = async (params) => {
 
                 }
             )
-        })
     } finally {
        await session.close()
     }
