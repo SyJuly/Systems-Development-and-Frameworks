@@ -1,22 +1,16 @@
 language: node_js
 node_js:
   - "stable"
-env:
-  - NEO4J_VERSION="3.5.14"
 services:
 - docker
 before_install:
 - docker run --name todo_neo4j -p7474:7474 -p7687:7687 -d --env NEO4J_AUTH=neo4j/test neo4j:latest
-
 jobs:
   include:
     - stage: "Backend"
       install:
         - cd ./ToDoApp/Backend
         - npm install
-      before_script:
-      - docker-compose up
-      - wait-on http://localhost:7474
       script:
         - npm test
     - stage: "Frontend"
