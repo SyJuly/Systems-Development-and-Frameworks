@@ -4,34 +4,32 @@ const { getTestApolloServer,cleanDatabase,createUser } = require('../../utils/te
 
 const {query, mutate} = createTestClient(getTestApolloServer(false));
 
-
-beforeEach(async () => {
-             await cleanDatabase()
-             await createUser ({name: 'x Testuser', email: 'xtester@email.com' , password:'password'})
-             await createUser ({name: 'a Testuser', email: 'atester@email.com' ,password:'password'})
+afterEach(async (done) => {
+    await cleanDatabase()
+    done()
 })
-describe('User', () => {
 
+describe('User', () => {
+ beforeEach(async () => {
+           await createUser ({id:"11",name: 'X Testuser', email: 'xtester@email.com' , password:'password'})
+        })
         describe('query', () =>{
             it('by Email', async () => {
                 const res = await query({
                     query: USER_BY_EMAIL,
                     variables: {
-                        email: "atester@email.com"
+                        email: "xtester@email.com"
                     }
                 });
-                expect(res.data.userByEmail.name).toEqual("a Testuser");
+                expect(res.data.userByEmail.name).toEqual("X Testuser");
             });
-            /**
-            it('orders List by Name ', async () => {
+            it('orders List by Name ASC ', async () => {
+                await createUser ({id:"99",name: 'A Testuser', email: 'atester@email.com' ,password:'password'})
                 const res = await query({
                     query: GET_ALL_USERS
                 });
-                console.log(res.data)
-                expect(res.data.allUsers[0].name).toEqual("a Testuser");
-                expect(res.data.allUsers[1].name).toEqual("x Testuser");
+                expect(res.data.allUsers[0].name).toEqual("A Testuser");
             });
-            **/
         });
          describe('mutate', () => {
                 it('signup returns error when email is already in use', async () => {
@@ -39,7 +37,7 @@ describe('User', () => {
                         mutation: SIGNUP,
                         variables: {
                             name: "eva",
-                            email: "atester@email.com",
+                            email: "xtester@email.com",
                             password: "password"
                         }
                     });
@@ -51,7 +49,7 @@ describe('User', () => {
                         mutation: SIGNUP,
                         variables: {
                             name: "eva",
-                            email: "a@email.com",
+                            email: "eva@email.com",
                             password: "password"
                         }
                     });
