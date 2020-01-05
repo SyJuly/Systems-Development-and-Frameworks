@@ -1,34 +1,20 @@
 const { createTestClient } = require('apollo-server-testing');
 const { gql} = require('apollo-server');
-const { getTestApolloServer } = require('../../utils/testHelper');
+const { getTestApolloServer,cleanDatabase,createUser,createTodo } = require('../../utils/testHelper');
 
+const clientLoggedIn = createTestClient(getTestApolloServer(true));
 const clientLoggedOut = createTestClient(getTestApolloServer(false));
 
-const clientLoggedIn= createTestClient(getTestApolloServer(true));
 
-/**
-describe('query', () => {
-    describe('todos', () => {
-        it('querying all todos returns only 1 Todo because of limit', async () => {
-            const res = await query({
-                query: GET_ALL_TODOS
-            });
-            expect(res.data.allTodos).toHaveLength(1);
-        });
-        it('returns todo-message for given id', async () => {
-            const res = await query({
-                query: GET_FIRST_TODOMESSAGE
-            });
-            expect(res.data.todoById).toMatchObject({
-                message: "first todo"
-            });
-        });
-    });
-});
-**/
-describe('mutate', () => {
+beforeEach(async () => {
+    await cleanDatabase()
+    await createUser({ id: "1",  name: 'First Testuser', email: 'first@email.com', password: 'password'  })
+    await createTodo({ id: "1",message: 'first todo',finished: false,userId: "2"    })
+    await createTodo({ id: "2",message: 'second todo',   finished: false,  userId: "1" })
+})
 
-  describe('given user is not logged in/no token', () => {
+describe('Todos', () => {
+    describe('user is not logged in', () => {
         it('creating a todo returns an error', async () => {
             const res = await clientLoggedOut.mutate({
                 mutation: CREATE_TODO,
@@ -38,7 +24,26 @@ describe('mutate', () => {
             });
             expect(res.errors[0].message).toEqual("Not Authorised!");
         });
+        it('query returns todo-message for given id', async () => {
+            const res = await clientLoggedOut.query({
+                query: GET_TODOMESSAGE_BYID,
+                variables: {
+                    id: "1"
+                }
+            });
+
+            expect(res.data.todoById).toMatchObject({
+                message: "first todo"
+            });
+        });
+        it('query all todos returns only 1 Todo because of limit', async () => {
+            const res = await clientLoggedOut.query({
+                query: GET_ALL_TODOS
+            });
+            expect(res.data.allTodos).toHaveLength(1);
+        });
     });
+
     describe('give user is loggedIn', () => {
         it('adds a todo', async () => {
             const res = await clientLoggedIn.mutate({
@@ -49,57 +54,33 @@ describe('mutate', () => {
             });
             expect(res.data.addTodo[0].message).toEqual("neues Todo");
         });
-        describe('Modifying Todos', () => {
-         /**
-            describe('given the loggedIn-User is the creator of the todo (allowed to modify)', () => {
-
-                it('updates todo message ', async () => {
-                    const res = await mutate({
-                        mutation: UPDATE_TODO_MESSAGE,
-                        variables: {
-                            id: "1",
-                            message: "kleines Update",
-                            finished: false,
-                            token: logInToken
-                        }
-                    });
-                    expect(res.data.updateTodo.message).toEqual("kleines Update");
-                });
-                it('deletes todo ', async () => {
-                    const res = await mutate({
-                        mutation: DELETE_TODO,
-                        variables: {
-                            id: "1",
-                            token: logInToken
-                        }
-                    });
-                    expect(res.data.deleteTodo.id).toEqual("1");
-
-                });
-
+        describe('given the loggedIn-User is the creator of the todo (allowed to modify)', () => {
+            it('deletes todo ', async () => {
+                           const res = await clientLoggedIn.mutate({
+                               mutation: DELETE_TODO,
+                               variables: {
+                                   id: "2"
+                               }
+                           });
+                           expect(res.data.deleteTodo.id).toEqual("2");
             });
-              **/
-            describe('given the loggedIn-User is NOT the creator of the todo (NOT allowed to modify)', () => {
-                it('does not delete the todo', async () => {
-                    const res = await clientLoggedIn.mutate({
-                        mutation: DELETE_TODO,
-                        variables: {
-                            id: "2"
-                        }
-                    });
-                    expect(res.data.deleteTodo).toBeNull();
+        });
+
+        describe('given the loggedIn-User is NOT the creator of the todo (NOT allowed to modify)', () => {
+            it('does not delete the todo', async () => {
+                const res = await clientLoggedIn.mutate({
+                    mutation: DELETE_TODO,
+                    variables: {
+                        id: "1"
+                    }
                 });
+                expect(res.data.deleteTodo).toBeNull();
             });
-        })
+        });
     });
+
+
 });
-
-const LOGIN = gql `
-      mutation login($email: String!, $password: String!) {
-          login(email: $email, password: $password)
-      }
-  `;
-
 const GET_ALL_TODOS = gql `
                          query {
                               allTodos {
@@ -109,12 +90,13 @@ const GET_ALL_TODOS = gql `
                               }
                             `;
 
-const GET_FIRST_TODOMESSAGE = gql `
-                    query {
-                      todoById(id:"1") {
-                        message
+const GET_TODOMESSAGE_BYID = gql `
+                    query addTodo($id: String!){
+                          todoById(id: $id) {
+                            message
+                          }
                       }
-                    }
+
                   `;
 
 const CREATE_TODO = gql `
