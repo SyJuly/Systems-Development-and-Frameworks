@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const { CONFIG }= require("../config/config");
 
 const getAuth = (req) => {
-  const authToken = req.get('auth-token');
+  const authToken = req.get('authToken');
   if(authToken == null){
     return {};
   }

@@ -7,7 +7,7 @@ import VueApollo from 'vue-apollo'
 import { setContext } from 'apollo-link-context';
 
 const httpLink = new HttpLink({
-  uri: process.env.VUE_APP_GRAPHQL_ENDPOINT
+  uri: "http://localhost:4000"
 })
 
 // Error Handling
@@ -21,12 +21,14 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (networkError) console.log(`[Network error]: ${networkError}`)
 })
 
-const authLink = setContext((_, { headers }) => {
+const authLink = setContext((_, context) => {
   // get the authentication token from local storage if it exists
   const token = localStorage.getItem('auth-token');
   // return the headers to the context so httpLink can read them
-  headers.authorization = token ? token : ""
-  return headers;
+  context.headers = {
+    authToken: token ? token : ""
+  }
+  return context;
 });
 
 // Create the apollo client
