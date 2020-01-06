@@ -1,4 +1,4 @@
-const {users, todos} = require('./data');
+const {users, todos, events} = require('./data');
 
 const createUsers = async(driver) =>{
   users.forEach(async user => {
@@ -25,10 +25,22 @@ const createTodos = (driver) =>{
     await session.close();
   })
 }
+const createEvents = (driver) =>{
+  events.forEach(async event => {
+    console.log("creating event")
+    const session = driver.session();
+    await session.run(
+        'CREATE (e:Event {id: $id, motto: $motto, date: $date})\n' ,
+        event
+    );
+    await session.close();
+  })
+}
 
 const seedDatabase = async(driver) => {
   await createUsers(driver);
   await createTodos(driver);
+  await createEvents(driver);
 }
 
 module.exports.seedDatabase = seedDatabase;

@@ -24,7 +24,20 @@ let users = [{
     email: '2your@email.com',
     password: '$2y$10$3IUx11G0mcJfSpFWn3Lru.xac9OqHDzqLOAhdZovaUyKa2DhgCaOS' // "password"
   }
+];
+
+let events = [{
+    id: '1',
+    motto: '90s Party',
+    date:"31.01.2020"
+    },
+    {
+      id: '2',
+      motto: 'SDF Vortrag',
+      date:"15.01.2020"
+    }
 ]
 
 module.exports.todos = todos;
 module.exports.users = users;
+module.exports.events = events;

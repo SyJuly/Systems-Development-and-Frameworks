@@ -3,6 +3,7 @@ const { ApolloServer, makeExecutableSchema} = require('apollo-server');
 const { typeDefs } = require("../schema/typeDefs");
 const { userResolver } = require("../resolvers/user/userResolver");
 const { todoResolver } = require("../resolvers/todo/todoResolver");
+const { eventResolver } = require("../resolvers/event/eventResolver");
 const { augmentSchema } = require("neo4j-graphql-js");
 const neo4j = require('neo4j-driver');
 const { getToken } = require('./auth')
@@ -20,7 +21,7 @@ const driver = neo4j.driver(
     }
 )
 
-const resolvers = mergeResolvers([userResolver, todoResolver]);
+const resolvers = mergeResolvers([userResolver, todoResolver,eventResolver]);
 
 const schema = makeExecutableSchema({
   typeDefs,
@@ -102,7 +103,28 @@ const createTodo = async (params) => {
     }
 }
 
+const createEvent = async (params) => {
+    getTestApolloServer(true);
+    const session = driver.session()
+    if (params.id == null) eventID = generateUUID();
+            else eventID = params.id;
+    try {
+        await session.writeTransaction(transaction => {
+            return transaction.run(
+                'CREATE (e:Event {id: $id, motto: $motto, date: $date}) RETURN e',{
+                    id: eventID,
+                    motto: params.motto,
+                    date: params.date
+                }
+            )
+        })
+    } finally {
+       await session.close()
+    }
+}
+
 module.exports.getTestApolloServer = getTestApolloServer;
 module.exports.cleanDatabase = cleanDatabase;
 module.exports.createUser = createUser;
 module.exports.createTodo = createTodo;
+module.exports.createEvent = createEvent;

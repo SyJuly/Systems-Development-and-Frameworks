@@ -19,7 +19,8 @@ const { typeDefs } = require('./src/schema/typeDefs');
 
 const { userResolver } = require("./src/resolvers/user/userResolver");
 const { todoResolver } = require("./src/resolvers/todo/todoResolver");
-const resolvers = mergeResolvers([userResolver, todoResolver]);
+const { eventResolver } = require("./src/resolvers/event/eventResolver");
+const resolvers = mergeResolvers([userResolver, todoResolver, eventResolver]);
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 const augmentedSchema = augmentSchema(applyMiddleware(schema, permissions));

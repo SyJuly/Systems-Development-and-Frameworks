@@ -8,6 +8,7 @@ const typeDefs = gql`
     message: String
     finished: Boolean
     creator: User
+    event: Event
   }
   type User {
     id: String!
@@ -15,14 +16,22 @@ const typeDefs = gql`
     email: String
     password: String
   }
+   type Event {
+      id: String!
+      motto: String
+      date: String
+   }
   type Query {
     todoById(id: String!): Todo
+    eventByMotto(motto: String!): Event
     userByEmail(email: String!):User
     allTodos: [Todo]
     allUsers: [User]
+    allEvents:[Event]
   }
   type Mutation {
     addTodo( message: String): [Todo]
+    addEvent( motto: String, date: String): Event
     updateTodo( id: String, message: String , finished: Boolean): Todo
     deleteTodo(id: String): Todo
     login(email: String!, password: String!): String!
