@@ -13,3 +13,12 @@ export const GET_ALL_TODOS = gql `
                                 }
                               }
                             `;
+export const GET_ALL_EVENTS = gql `
+                         query {
+                              allEvents {
+                                  id
+                                  motto
+                                  date
+                                }
+                              }
+                            `;

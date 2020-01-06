@@ -1,5 +1,6 @@
 <template>
-  <div v-show="!isLoggedIn">
+  <div class="login" v-show="!isLoggedIn">
+    <h3>Login</h3>
     <div class='flex flex-column'>
       <input
         v-show="!canLogin"
@@ -75,3 +76,13 @@
     }
   }
 </script>
+
+<style>
+  .login{
+    position: fixed;
+    letf:0;
+    width: 200px;
+    margin-right: 5%;
+    margin-left: 5%;
+  }
+</style>

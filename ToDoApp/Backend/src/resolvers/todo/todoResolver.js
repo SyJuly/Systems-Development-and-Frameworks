@@ -4,7 +4,7 @@ const todoResolver = {
     Query: {
         allTodos: async (parent, args, context) => {
          const session = context.driver.session();
-         const queryResults = await session.run('MATCH(t:Todo) RETURN t LIMIT 1');
+         const queryResults = await session.run('MATCH(t:Todo) RETURN t LIMIT 10');
          const todos = queryResults.records.map(todo => todo.get('t').properties);
          session.close()
          return todos;
