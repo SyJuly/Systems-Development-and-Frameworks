@@ -2,16 +2,35 @@ import ToDoList from '../ToDoList/ToDoList.vue';
 import ToDoItem from '../ToDoItem/ToDoItem.vue';
 import {mount} from "@vue/test-utils";
 
-describe('ToDoList', () => {
-  const wrapper = mount(ToDoList);
+const data = {
+    allTodos: [
+      {
+        id: 1,
+        message: "message"
+      }
+    ]
+  }
+let wrapper;
 
-  it('renders 10 initial example-items on the list', () => {
-    expect(wrapper.findAll(ToDoItem)).toHaveLength(10)
+describe('ToDoList', () => {
+  beforeEach(() =>{
+     wrapper = mount(ToDoList, {
+       mocks: {
+         $apollo: {
+           query: jest.fn(() => Promise.resolve({
+             data
+           }))
+         }
+       }
+    })
+  })
+  it('renders 1 initial example-items on the list', () => {
+    expect(wrapper.findAll(ToDoItem)).toHaveLength(1)
   });
 
   it('decreases in size when Item is removed', () => {
     wrapper.find('#removeButton').trigger('click');
-    expect(wrapper.findAll(ToDoItem)).toHaveLength(9);
+    expect(wrapper.findAll(ToDoItem)).toHaveLength(0);
 
   });
 });

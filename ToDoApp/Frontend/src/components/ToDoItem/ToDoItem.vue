@@ -5,7 +5,7 @@
       <b-button @click="save" >Save</b-button>
     </span>
     <span v-else>
-      {{todo.text}}
+      {{todo.message}}
       <b-button id="editButton" variant="outline-primary" @click="edit" >Edit</b-button>
     </span>
     <b-button id="removeButton" variant="outline-danger" @click="$emit('removeTodo', todo.id)">Remove</b-button>
@@ -22,7 +22,7 @@
     },
     props:{
       todo: {
-        text: String
+        message: String
       },
       editTodo: Function,
       removeTodo: Function,
@@ -42,7 +42,7 @@
         this.editModeOn = false;
         this.$emit('editTodo', {
             id:this.$props.todo.id,
-            text: this.todoEditTextInput
+            message: this.todoEditTextInput
         });
       }
     }
