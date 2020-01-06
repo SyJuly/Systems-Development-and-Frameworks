@@ -10,10 +10,12 @@ afterEach(async (done) => {
     done()
 })
 
+beforeEach(async (done) => {
+  await createUser ({id:"11",name: 'X Testuser', email: 'xtester@email.com' , password:'password'})
+  done()
+})
+
 describe('User', () => {
- beforeEach(async () => {
-           await createUser ({id:"11",name: 'X Testuser', email: 'xtester@email.com' , password:'password'})
-        })
         describe('query', () =>{
             it('by Email', async () => {
                 const res = await query({

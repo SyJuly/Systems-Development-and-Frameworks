@@ -10,13 +10,16 @@ afterEach(async (done) => {
     done()
 })
 
-describe('Todos', () => {
-    beforeEach(async () => {
-        await createUser({ id: "1",  name: 'First Testuser', email: 'first@email.com', password: 'password'  })
-        await createTodo({ id: "1",message: 'first todo', finished: false,userId: "2"  })
-        await createTodo({ id: "2",message: 'second todo', finished: false, userId: "1" })
+beforeEach(async (done) => {
+    await createUser({ id: "1",  name: 'First Testuser', email: 'first@email.com', password: 'password'  })
+    await createTodo({ id: "1",message: 'first todo', finished: false,userId: "2"  })
+    await createTodo({ id: "2",message: 'second todo', finished: false, userId: "1" })
+    done()
 
-    })
+})
+
+describe('Todos', () => {
+
     describe('user is not logged in', () => {
         it('creating a todo returns an error', async () => {
             const res = await clientLoggedOut.mutate({

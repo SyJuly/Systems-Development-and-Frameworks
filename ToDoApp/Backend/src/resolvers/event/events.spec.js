@@ -9,11 +9,14 @@ afterEach(async (done) => {
     done()
 })
 
+beforeEach(async (done) => {
+    await createEvent({id: "1",motto: '90s Party',date: "31.01.2020"  })
+    await createEvent({id: "2", motto: 'SDF Vortrag', date: "15.01.2020" })
+    done()
+})
+
 describe('Events', () => {
-    beforeEach(async () => {
-        await createEvent({id: "1",motto: '90s Party',date: "31.01.2020"  })
-        await createEvent({id: "2", motto: 'SDF Vortrag', date: "15.01.2020" })
-    })
+
     it('adding event with same motto returns an Error', async () => {
         const res = await mutate({
             mutation: CREATE_EVENT,
