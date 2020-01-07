@@ -8,18 +8,22 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
-    "test": "jest"
+    "test": "jest --detectOpenHandles --forceExit"
   },
   "dependencies": {
     "apollo-server": "^2.9.9",
-    "apollo-server-express": "^2.9.12",
     "apollo-server-testing": "^2.9.9",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "graphql": "^14.5.8",
+    "graphql-middleware": "^4.0.2",
+    "graphql-shield": "^7.0.7",
     "jsonwebtoken": "^8.5.1",
     "merge-graphql-schemas": "^1.7.3",
+    "neo4j-driver": "^4.0.0",
+    "neo4j-graphql-js": "^2.10.2",
+    "uuid": "^3.3.3",
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.9.1"
   },

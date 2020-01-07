@@ -1,121 +1,100 @@
-const { mergeResolvers } = require("merge-graphql-schemas");
 const { createTestClient } = require('apollo-server-testing');
-const { ApolloServer, gql } = require('apollo-server');
-const { typeDefs } = require("../../schema/typeDefs");
-const { userResolver } = require("../user/userResolver");
-const { todoResolver } = require("./todoResolver");
+const { gql} = require('apollo-server');
+const { getTestApolloServer,cleanDatabase,createUser,createTodo } = require('../../utils/testHelper');
 
-const resolvers = mergeResolvers([userResolver, todoResolver]);
+const clientLoggedIn = createTestClient(getTestApolloServer(true));
+const clientLoggedOut = createTestClient(getTestApolloServer(false));
 
-const server = new ApolloServer({typeDefs, resolvers});
-const { query, mutate } = createTestClient(server);
+afterEach(async (done) => {
+    await cleanDatabase()
+    done()
+})
 
-describe('query', () => {
-    describe('todos', () => {
-        it('todo_list has 2 initial todos', async () => {
-            const res = await query({
+beforeEach(async (done) => {
+    await createUser({ id: "1",  name: 'First Testuser', email: 'first@email.com', password: 'password'  })
+    await createTodo({ id: "1",message: 'first todo', finished: false,userId: "2"  })
+    await createTodo({ id: "2",message: 'second todo', finished: false, userId: "1" })
+    done()
+})
+describe('Todos', () => {
+    describe('user is not logged in', () => {
+        it('creating a todo returns an error', async () => {
+            await expect(clientLoggedOut.mutate({
+                mutation: CREATE_TODO,
+                variables: {
+                    message: "neues Todo"
+                }
+            })).resolves.toMatchObject({
+                data: {addTodo: null}
+            })
+        });
+        it('query returns todo-message for given id', async () => {
+            await expect(clientLoggedOut.query({
+                query: GET_TODOMESSAGE_BYID,
+                variables: {
+                    id: "1"
+                }
+            })).resolves.toMatchObject({
+                data: {
+                    todoById: {
+                        message: "first todo"
+                    }
+                },
+                errors: undefined
+            })
+        });
+        it('query all todos ', async () => {
+            const res = await clientLoggedOut.query({
                 query: GET_ALL_TODOS
             });
             expect(res.data.allTodos).toHaveLength(2);
         });
-
-        it('returns todo-message for given id', async () => {
-            const res = await query({
-                query: GET_FIRST_TODOMESSAGE
-            });
-            expect(res.data.todoById).toMatchObject({message: "first todo"});
-        });
     });
-});
 
-describe('mutate', () => {
-    var logInToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJ5b3VyQGVtYWlsLmNvbSIsImlhdCI6MTU3NTQ0NjYzNCwiZXhwIjoxNjA3MDA0MjM0fQ.cHeP2Ih8Dxeyyxw3rePvfVCeJJFFnO7A9BrV1QL4hcA";
-    describe('given user is not logged in/no token', () => {
-        it('creating a todo returns an error', async () => {
-            const res = await mutate({
-                mutation: CREATE_TODO,
-                variables: {
-                    message: "neues Todo",
-                    token: ""
-                }
-            });
-            expect(res.errors).toHaveLength(1);
-        });
-        it('logIn with correct credentials returns token-String', async () => {
-            const res = await mutate({
-                mutation: LOGIN,
-                variables: {
-                    email: "your@email.com",
-                    password: "password"
-                }
-            });
-            expect(res.data.login).toBeDefined();
-        });
-    });
     describe('give user is loggedIn', () => {
         it('adds a todo', async () => {
-            const res_allTodos=await query ({
-                    query: GET_ALL_TODOS
-            });
-            const res = await mutate({
+            const res = await clientLoggedIn.mutate({
                 mutation: CREATE_TODO,
                 variables: {
-                    message: "neues Todo",
-                    token: logInToken
+                    message: "neues Todo"
                 }
             });
-            expect(res.data.addTodo).toHaveLength(res_allTodos.data.allTodos.length+1);
-            expect(res.data.addTodo[res.data.addTodo.length-1].message).toEqual("neues Todo");
-
+            expect(res.data.addTodo[0].message).toEqual("neues Todo");
         });
-        describe('Modifying Todos', () => {
-            describe('given the loggedIn-User is the creator of the todo (allowed to modify)', () => {
-
-                it('updates todo message ', async () => {
-                    const res = await mutate({
-                        mutation: UPDATE_TODO_MESSAGE,
-                        variables: {
-                            id: 1,
-                            message: "kleines Update",
-                            finished: false,
-                            token: logInToken
+        describe('given the loggedIn-User is the creator of the todo (allowed to modify)', () => {
+            it('deletes todo ', async () => {
+                await expect(clientLoggedIn.mutate({
+                    mutation: DELETE_TODO,
+                    variables: {
+                        id: "2"
+                    }
+                })).resolves.toMatchObject({
+                    data: {
+                        deleteTodo: {
+                            id: "2"
                         }
-                    });
-                    expect(res).toMatchObject({
-                        "data": {
-                            "updateTodo": {
-                                "message": "kleines Update"
-                            }
-                        }
-                    });
-                });
-                it('deletes todo ', async () => {
-                    const res = await mutate({
-                        mutation: DELETE_TODO,
-                        variables: {
-                            id: 1,
-                            token: logInToken
-                        }
-                    });
-                    expect(res.data.deleteTodo).toHaveLength(1);
-                });
+                    },
+                    errors: undefined
+                })
             });
-            describe('given the loggedIn-User is NOT the creator of the todo (NOT allowed to modify)', () => {
-                it('does not delete the todo', async () => {
-                    const res = await mutate({
-                        mutation: DELETE_TODO,
-                        variables: {
-                            id: 2,
-                            token: logInToken
-                        }
-                    });
-                    expect(res.data.deleteTodo.toBeUndefined);
-                });
+        });
+
+        describe('given the loggedIn-User is NOT the creator of the todo (NOT allowed to modify)', () => {
+            it('does not delete the todo', async () => {
+                await expect(clientLoggedIn.mutate({
+                    mutation: DELETE_TODO,
+                    variables: {
+                        id: "1"
+                    }
+                })).resolves.toMatchObject({
+                    data: {
+                        deleteTodo: null
+                    }
+                })
             });
         });
     });
 });
-
 const GET_ALL_TODOS = gql `
                          query {
                               allTodos {
@@ -125,17 +104,18 @@ const GET_ALL_TODOS = gql `
                               }
                             `;
 
-const GET_FIRST_TODOMESSAGE = gql `
-                    query {
-                      todoById(id:1) {
-                        message
+const GET_TODOMESSAGE_BYID = gql `
+                    query addTodo($id: String!){
+                          todoById(id: $id) {
+                            message
+                          }
                       }
-                    }
+
                   `;
 
 const CREATE_TODO = gql `
-                mutation addTodo($message: String, $token: String){
-                   addTodo(message: $message , token: $token)
+                mutation addTodo($message: String){
+                   addTodo(message: $message)
                     {
                       message
                     }
@@ -143,8 +123,8 @@ const CREATE_TODO = gql `
                 `;
 
 const DELETE_TODO = gql `
-        mutation deleteTodo($id: Int, $token:String) {
-            deleteTodo(id: $id, token:$token)
+        mutation deleteTodo($id: String) {
+            deleteTodo(id: $id)
             {
               id
               message
@@ -153,16 +133,10 @@ const DELETE_TODO = gql `
     `;
 
 const UPDATE_TODO_MESSAGE = gql `
-          mutation updateTodo( $id: Int, $message: String, $finished: Boolean, $token:String) {
-              updateTodo(id: $id, message: $message, finished:$finished, token:$token)
+          mutation updateTodo( $id: String, $message: String, $finished: Boolean) {
+              updateTodo(id: $id, message: $message, finished:$finished)
               {
                 message
               }
           }
-  `;
-
-const LOGIN = gql `
-      mutation login($email: String!, $password: String!) {
-          login(email: $email, password: $password)
-      }
   `;

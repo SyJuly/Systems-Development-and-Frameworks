@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <AppLogin/>
+    <div class="header">
+      <AppLogin/>
+      <Events/>
+    </div>
     <img src="./assets/logo.png">
     <h1>Simple Todo App</h1>
     <ToDoList/>
@@ -10,8 +13,10 @@
 <script>
   import ToDoList from "./components/ToDoList/ToDoList.vue";
   import AppLogin from "./components/AppLogin/AppLogin.vue";
+  import Events from "./components/Events/Events";
   export default {
     components: {
+      Events,
       AppLogin,
       ToDoList,
     },
@@ -31,4 +36,13 @@
 h1{
   font-weight: normal;
 }
+
+img{
+  margin-top: 200px;
+}
+
+  .header{
+    display: block;
+    align-content: center;
+  }
 </style>

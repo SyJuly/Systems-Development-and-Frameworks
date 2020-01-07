@@ -19,9 +19,10 @@
   import { BButton, BListGroup } from 'bootstrap-vue'
   import ToDoItem from "../ToDoItem/ToDoItem.vue";
   import  * as utils from "../../utils/utils.js"
+  import { GET_ALL_TODOS } from '../../graphql/queries'
 
   //inital setup
-  let todos = [...Array(10).keys()].map(id => ({ id, text: "Example of a note" }))
+  let todos = []
 
   export default {
     components: {
@@ -30,16 +31,27 @@
       'b-list-group' : BListGroup
     },
     data() {
+      this.getTodos();
       return {
         todoTextInput: "",
         todos,
       }
     },
     methods: {
+      getTodos(){
+        this.$apollo
+          .query({
+            query: GET_ALL_TODOS,
+            variables: {}
+          })
+          .then((data) => {
+            this.todos = data.data.allTodos;
+          })
+      },
       addTodo() {
         const newTodo = {
           id: utils.generateID(),
-          text: this.todoTextInput
+          message: this.todoTextInput
         }
 
         this.todos = [newTodo, ...this.todos];

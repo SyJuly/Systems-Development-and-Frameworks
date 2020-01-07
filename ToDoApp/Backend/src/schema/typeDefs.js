@@ -4,26 +4,36 @@ const { gql } = require('apollo-server');
 // your data.
 const typeDefs = gql`
   type Todo {
-    id: Int!
+    id: String!
     message: String
     finished: Boolean
-    creator: [User]
+    creator: User
+    event: Event
   }
   type User {
-    id: Int!
+    id: String!
     name: String
     email: String
     password: String
   }
+   type Event {
+      id: String!
+      motto: String
+      date: String
+   }
   type Query {
-    todoById(id: Int!): Todo
+    todoById(id: String!): Todo
+    eventByMotto(motto: String!): Event
+    userByEmail(email: String!):User
     allTodos: [Todo]
     allUsers: [User]
+    allEvents:[Event]
   }
   type Mutation {
-    addTodo( message: String, token: String): [Todo]
-    updateTodo( id: Int, message: String , finished: Boolean, token: String): Todo
-    deleteTodo(id: Int, token: String): [Todo]
+    addTodo( message: String): [Todo]
+    addEvent( motto: String, date: String): Event
+    updateTodo( id: String, message: String , finished: Boolean): Todo
+    deleteTodo(id: String): Todo
     login(email: String!, password: String!): String!
     signup(name: String!, email: String!, password: String!): String!
   }

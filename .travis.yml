@@ -1,6 +1,10 @@
 language: node_js
 node_js:
   - "stable"
+services:
+- docker
+before_install:
+- docker run --name todo_neo4j -p7474:7474 -p7687:7687 -d --env NEO4J_AUTH=neo4j/password neo4j:latest
 jobs:
   include:
     - stage: "Backend"
@@ -16,3 +20,4 @@ jobs:
       script:
         - npm test
         - npm run lint
+
