@@ -15,35 +15,39 @@ beforeEach(async (done) => {
     await createTodo({ id: "1",message: 'first todo', finished: false,userId: "2"  })
     await createTodo({ id: "2",message: 'second todo', finished: false, userId: "1" })
     done()
-
 })
-
 describe('Todos', () => {
-
     describe('user is not logged in', () => {
         it('creating a todo returns an error', async () => {
-            const res = await clientLoggedOut.mutate({
+            await expect(clientLoggedOut.mutate({
                 mutation: CREATE_TODO,
                 variables: {
                     message: "neues Todo"
                 }
-            });
-            expect(res.errors[0].message).toEqual("Not Authorised!");
+            })).resolves.toMatchObject({
+                data: {addTodo: null}
+            })
         });
         it('query returns todo-message for given id', async () => {
-            const res = await clientLoggedOut.query({
+            await expect(clientLoggedOut.query({
                 query: GET_TODOMESSAGE_BYID,
                 variables: {
                     id: "1"
                 }
-            });
-            expect(res.data.todoById.message).toEqual("first todo");
+            })).resolves.toMatchObject({
+                data: {
+                    todoById: {
+                        message: "first todo"
+                    }
+                },
+                errors: undefined
+            })
         });
-        it('query all todos returns only 1 Todo because of limit', async () => {
+        it('query all todos ', async () => {
             const res = await clientLoggedOut.query({
                 query: GET_ALL_TODOS
             });
-            expect(res.data.allTodos).toHaveLength(1);
+            expect(res.data.allTodos).toHaveLength(2);
         });
     });
 
@@ -59,30 +63,37 @@ describe('Todos', () => {
         });
         describe('given the loggedIn-User is the creator of the todo (allowed to modify)', () => {
             it('deletes todo ', async () => {
-                           const res = await clientLoggedIn.mutate({
-                               mutation: DELETE_TODO,
-                               variables: {
-                                   id: "2"
-                               }
-                           });
-                           expect(res.data.deleteTodo.id).toEqual("2");
+                await expect(clientLoggedIn.mutate({
+                    mutation: DELETE_TODO,
+                    variables: {
+                        id: "2"
+                    }
+                })).resolves.toMatchObject({
+                    data: {
+                        deleteTodo: {
+                            id: "2"
+                        }
+                    },
+                    errors: undefined
+                })
             });
         });
 
         describe('given the loggedIn-User is NOT the creator of the todo (NOT allowed to modify)', () => {
             it('does not delete the todo', async () => {
-                const res = await clientLoggedIn.mutate({
+                await expect(clientLoggedIn.mutate({
                     mutation: DELETE_TODO,
                     variables: {
                         id: "1"
                     }
-                });
-                expect(res.data.deleteTodo).toBeNull();
+                })).resolves.toMatchObject({
+                    data: {
+                        deleteTodo: null
+                    }
+                })
             });
         });
     });
-
-
 });
 const GET_ALL_TODOS = gql `
                          query {

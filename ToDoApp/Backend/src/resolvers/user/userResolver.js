@@ -69,7 +69,7 @@ const userResolver = {
             );
             const userFromEmail = queryResults.records.map(user => user.get(`u`).properties)[0];
             if (userFromEmail == null) {
-                throw new Error(`Couldn’t find a user for email: ${email}`);
+                throw new Error(`Incorrect password or email address`);
             }
             const valid = bcrypt.compare(password, userFromEmail.password);
             if (!valid) {
