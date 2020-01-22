@@ -13,3 +13,10 @@ yarn-error.log
 
 #Secret
 #1/ToDoApp/src/backend/config/config.js
+
+
+# Nuxt build
+.nuxt
+
+# Nuxt generate
+dist
