@@ -7,6 +7,7 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
+    "nuxt": "nuxt src/",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "test": "jest",
     "lint": "eslint src"
@@ -19,10 +20,11 @@
     "apollo-link-http": "^1.5.16",
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.4",
+    "cssnano": "^4.1.10",
     "graphql": "^14.5.8",
     "graphql-tag": "^2.10.1",
     "nuxt": "^2.11.0",
-    "vue": "^2.6.10",
+    "vue": "^2.6.11",
     "vue-apollo": "^3.0.2"
   },
   "browserslist": [
@@ -38,17 +40,17 @@
     "babel-preset-env": "^1.6.0",
     "babel-preset-stage-3": "^6.24.1",
     "cross-env": "^5.0.5",
-    "css-loader": "^0.28.7",
+    "css-loader": "^3.4.2",
     "eslint": "^6.6.0",
     "eslint-plugin-vue": "^6.0.0",
     "file-loader": "^1.1.4",
     "jest": "^24.9.0",
-    "node-sass": "^4.5.3",
+    "node-sass": "^4.13.1",
     "sass-loader": "^6.0.6",
     "vue-jest": "^3.0.5",
-    "vue-loader": "^13.0.5",
-    "vue-template-compiler": "^2.4.4",
-    "webpack": "^3.6.0",
-    "webpack-dev-server": "^2.9.1"
+    "vue-loader": "^15.8.3",
+    "vue-template-compiler": "^2.6.11",
+    "webpack": "^4.41.5",
+    "webpack-dev-server": "^2.11.5"
   }
 }
